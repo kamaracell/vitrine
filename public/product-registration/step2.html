@@ -1,0 +1,389 @@
+<script>
+    if (window.location.href === window.parent.location.href) {
+        window.location.replace('/admin-painel.html');
+    }
+</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto - Passo 2</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Estilos gerais da página */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { margin-top: 10px; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        /* Novo estilo para labels e campos de texto */
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input[type="text"], form select, form textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box; /* Garante que padding não afete a largura */
+        }
+
+        form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        form button:hover { background-color: #218838; }
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        #statusMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #statusMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #statusMessage.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+        .form-data-display {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        .form-data-display p {
+            margin: 5px 0;
+        }
+        .form-data-display strong {
+            display: inline-block;
+            width: 120px;
+        }
+
+        .spec-container, .sizes-container {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .spec-input-group, .size-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .spec-input-group input, .size-input-group input {
+            flex-grow: 1;
+            margin-bottom: 0;
+        }
+        .tech-spec-item, .size-item {
+            background-color: #e9e9e9;
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tech-spec-item span.remove-spec, .size-item span.remove-size {
+            color: red;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .auto-resize-textarea {
+            resize: none;
+            overflow: hidden;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.replace('/index.html');
+            }
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/index.html">
+    </noscript>
+
+    <main id="main-content-wrapper">
+        <h2>Cadastro de Produto - Passo 2</h2>
+
+        <div class="form-data-display">
+            <p><strong>Código:</strong> <span id="productCodeDisplay"></span></p>
+            <p><strong>Nome:</strong> <span id="productNameDisplay"></span></p>
+        </div>
+
+        <form id="step2Form">
+            <label for="description">Descrição:</label>
+            <textarea id="description" name="description" class="auto-resize-textarea" required></textarea>
+
+            <label for="long_description">Descrição Longa:</label>
+            <textarea id="long_description" name="long_description" class="auto-resize-textarea"></textarea>
+
+            <h3>Especificações Técnicas</h3>
+            <div class="spec-container">
+                <div class="spec-input-group">
+                    <input type="text" id="newTechSpecTitle" placeholder="Título (Ex: Material)">
+                    <input type="text" id="newTechSpecValue" placeholder="Valor (Ex: Algodão)">
+                    <button type="button" id="addTechSpecButton">Adicionar</button>
+                </div>
+                <div id="technicalSpecsContainer"></div>
+            </div>
+
+            <h3>Tamanhos</h3>
+            <label for="sizeTypeSelect">Tipo de Tamanho:</label>
+            <select id="sizeTypeSelect">
+                <option value="none">Nenhum</option>
+                <option value="clothing">Roupas</option>
+                <option value="shoes">Calçados</option>
+            </select>
+            <br><br>
+
+            <div id="sizesSection" style="display: none;">
+                <div class="sizes-container">
+                    <div class="size-input-group">
+                        <input type="text" id="newSizeInput" placeholder="Tamanho (Ex: P, M, 40)">
+                        <button type="button" id="addSizeButton">Adicionar</button>
+                    </div>
+                    <div id="sizesContainer"></div>
+                </div>
+            </div>
+
+            <button type="button" id="prevStepButton">Anterior</button>
+            <button type="submit" id="nextStepButton">Próximo</button>
+        </form>
+
+        <div id="statusMessage"></div>
+    </main>
+    <script>
+        const step2Form = document.getElementById('step2Form');
+        const descriptionInput = document.getElementById('description');
+        const longDescriptionInput = document.getElementById('long_description');
+        const productCodeDisplay = document.getElementById('productCodeDisplay');
+        const productNameDisplay = document.getElementById('productNameDisplay');
+        const prevStepButton = document.getElementById('prevStepButton');
+        const statusMessageDiv = document.getElementById('statusMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const newTechSpecTitleInput = document.getElementById('newTechSpecTitle');
+        const newTechSpecValueInput = document.getElementById('newTechSpecValue');
+        const addTechSpecButton = document.getElementById('addTechSpecButton');
+        const technicalSpecsContainer = document.getElementById('technicalSpecsContainer');
+        let technicalSpecifications = [];
+
+        const sizeTypeSelect = document.getElementById('sizeTypeSelect');
+        const sizesSection = document.getElementById('sizesSection');
+        const newSizeInput = document.getElementById('newSizeInput');
+        const addSizeButton = document.getElementById('addSizeButton');
+        const sizesContainer = document.getElementById('sizesContainer');
+        let productSizes = [];
+
+        function showStatusMessage(message, type) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = '';
+            statusMessageDiv.classList.add(type);
+            statusMessageDiv.style.display = 'block';
+        }
+
+        // Função para redimensionar automaticamente as textareas
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function updateTechnicalSpecsDisplay() {
+            technicalSpecsContainer.innerHTML = '';
+            technicalSpecifications.forEach((spec, index) => {
+                const div = document.createElement('div');
+                div.className = 'tech-spec-item';
+                div.innerHTML = `<span><strong>${spec.titulo}:</strong> ${spec.valor}</span> <span class="remove-spec" data-index="${index}">&times;</span>`;
+                technicalSpecsContainer.appendChild(div);
+            });
+            document.querySelectorAll('.remove-spec').forEach(button => {
+                button.addEventListener('click', function() {
+                    const indexToRemove = parseInt(this.dataset.index);
+                    technicalSpecifications.splice(indexToRemove, 1);
+                    updateTechnicalSpecsDisplay();
+                });
+            });
+        }
+
+        function updateSizesDisplay() {
+            sizesContainer.innerHTML = '';
+            productSizes.forEach((size, index) => {
+                const div = document.createElement('div');
+                div.className = 'size-item';
+                div.innerHTML = `<span class="remove-size" data-index="${index}">&times;</span> <span>${size}</span>`;
+                sizesContainer.appendChild(div);
+            });
+            document.querySelectorAll('.remove-size').forEach(button => {
+                button.addEventListener('click', function() {
+                    const indexToRemove = parseInt(this.dataset.index);
+                    productSizes.splice(indexToRemove, 1);
+                    updateSizesDisplay();
+                });
+            });
+        }
+
+        addTechSpecButton.addEventListener('click', function() {
+            const title = newTechSpecTitleInput.value.trim();
+            const value = newTechSpecValueInput.value.trim();
+            if (title && value) {
+                technicalSpecifications.push({ titulo: title, valor: value });
+                newTechSpecTitleInput.value = '';
+                newTechSpecValueInput.value = '';
+                updateTechnicalSpecsDisplay();
+            } else {
+                showStatusMessage('Por favor, preencha o título e o valor da especificação.', 'error');
+            }
+        });
+
+        addSizeButton.addEventListener('click', function() {
+            const size = newSizeInput.value.trim();
+            if (size) {
+                productSizes.push(size);
+                newSizeInput.value = '';
+                updateSizesDisplay();
+            } else {
+                showStatusMessage('Por favor, digite um tamanho.', 'error');
+            }
+        });
+
+        sizeTypeSelect.addEventListener('change', () => {
+            const selectedType = sizeTypeSelect.value;
+            if (selectedType === 'none') {
+                sizesSection.style.display = 'none';
+                productSizes = []; // Limpa os tamanhos se "Nenhum" for selecionado
+                updateSizesDisplay();
+            } else {
+                sizesSection.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Valida o fluxo: checa se os dados da etapa 1 existem
+            const productData = JSON.parse(sessionStorage.getItem('newProductData'));
+            if (!productData || !productData.product_code || !productData.name) {
+                showStatusMessage('Dados do produto não encontrados. Redirecionando para a Etapa 1.', 'error');
+                setTimeout(() => {
+                    window.location.href = './step1.html';
+                }, 2000);
+                return;
+            }
+
+            // Exibe os dados do passo anterior
+            productCodeDisplay.textContent = productData.product_code;
+            productNameDisplay.textContent = productData.name;
+
+            // Adiciona o evento para redimensionar as textareas
+            descriptionInput.addEventListener('input', () => autoResizeTextarea(descriptionInput));
+            longDescriptionInput.addEventListener('input', () => autoResizeTextarea(longDescriptionInput));
+
+            // Se o usuário voltar, preenche os campos com os dados já salvos
+            if (productData.description) {
+                descriptionInput.value = productData.description;
+                autoResizeTextarea(descriptionInput);
+            }
+            if (productData.long_description) {
+                longDescriptionInput.value = productData.long_description;
+                autoResizeTextarea(longDescriptionInput);
+            }
+            if (productData.technical_specifications) {
+                technicalSpecifications = productData.technical_specifications;
+                updateTechnicalSpecsDisplay();
+            }
+            if (productData.product_sizes) {
+                productSizes = productData.product_sizes;
+                updateSizesDisplay();
+                // Exibe a seção de tamanhos se já houver dados
+                if (productSizes.length > 0) {
+                    sizesSection.style.display = 'block';
+                    sizeTypeSelect.value = productData.size_type || 'clothing';
+                }
+            }
+        });
+
+        prevStepButton.addEventListener('click', () => {
+            // Salva o progresso antes de voltar
+            const productData = JSON.parse(sessionStorage.getItem('newProductData')) || {};
+            productData.description = descriptionInput.value.trim();
+            productData.long_description = longDescriptionInput.value.trim();
+            productData.technical_specifications = technicalSpecifications;
+            productData.product_sizes = productSizes;
+            productData.size_type = sizeTypeSelect.value;
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+
+            window.location.href = './step1.html';
+        });
+
+        step2Form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const missingFields = [];
+            const descriptionContent = descriptionInput.value.trim();
+            const longDescriptionContent = longDescriptionInput.value.trim();
+
+            if (!descriptionContent) {
+                missingFields.push('Descrição');
+            }
+            if (!longDescriptionContent) {
+                missingFields.push('Descrição Longa');
+            }
+
+            if (missingFields.length > 0) {
+                showStatusMessage(`Por favor, preencha os seguintes campos: ${missingFields.join(', ')}.`, 'error');
+                return;
+            }
+
+            // Carrega os dados existentes, adiciona os novos e salva
+            const productData = JSON.parse(sessionStorage.getItem('newProductData')) || {};
+            productData.description = descriptionContent;
+            productData.long_description = longDescriptionContent;
+            productData.technical_specifications = technicalSpecifications;
+            productData.product_sizes = productSizes; // Salva o array de tamanhos
+            productData.size_type = sizeTypeSelect.value; // Salva o tipo de tamanho selecionado
+
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+
+            // Redireciona para o próximo passo
+            window.location.href = './step3.html';
+        });
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const { error } = await supabase.auth.signOut();
+                if (error) {
+                    console.error('Erro ao sair da sessão:', error.message);
+                    showStatusMessage('Erro ao sair da sessão.', 'error');
+                } else {
+                    window.location.replace('/index.html');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

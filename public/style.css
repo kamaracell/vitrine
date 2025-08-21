@@ -1,0 +1,1673 @@
+/* Variáveis CSS */
+:root {
+    /* Cores padrão, que serão sobrescritas pelo JavaScript se houver configurações salvas */
+    --site-name-color: #61dafb; /* NOVO: Cor padrão para o nome do site */
+    --header-background-color: #343a40; /* Cor padrão para cabeçalho */
+    --header-link-color: #ffffff; /* NOVO: Cor padrão para links do cabeçalho */
+    --footer-background-color: #343a40; /* Cor padrão para rodapé */
+    --footer-text-color: #ffffff; /* NOVO: Cor padrão para texto do rodapé */
+    --button-color: #007bff; /* Cor padrão para botões (azul padrão) */
+    --button-color-hover: #0056b3; /* Cor padrão para hover de botões (tom mais escuro) */
+    --button-color-active: #003e8e; /* NOVO: Cor padrão para active de botões */
+    --color-primary: #61dafb; /* Azul claro (React blue) - pode ser usado internamente ou redefinido */
+    --color-secondary: #e94e77; /* Rosa de destaque (para o botão de continuar comprando) */
+    --color-accent: #4a7dff; /* NOVO: Azul anil para o botão de Finalizar Compra */
+    --color-light: #f4f4f4; /* Cor de fundo geral */
+    --color-text-dark: #333; /* Cor de texto principal escuro */
+    --color-text-light: #fff; /* Cor de texto principal claro */
+    --color-dark-bg: #282c34; /* NOVO: Para fundos escuros de texto, ex: títulos */
+    --color-white: #ffffff; /* Adicionada para consistência */
+    
+    /* Variáveis para o painel de administração (migradas de admin-layout.css) */
+    --admin-primary-color: #28a745; /* Um verde para admin */
+    --admin-secondary-color: #007bff;
+    --admin-bg-color: #f4f7f6;
+    --admin-card-bg: #ffffff;
+    --admin-text-color: #333;
+    --admin-border-color: #e0e0e0;
+    --admin-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 0 4px 8px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Reset Básico e Fontes */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    line-height: 1.6;
+    color: var(--color-text-dark); /* Usando variável */
+    background-color: var(--color-light); /* Usando variável */
+    padding-top: 70px; /* AJUSTADO: Espaçamento para o cabeçalho fixo */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Cabeçalho (Header) */
+.main-header {
+    background-color: var(--header-background-color); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL */
+    color: var(--color-text-light); /* Usando variável */
+    padding: 1rem 0;
+    box-shadow: var(--shadow-light); /* Usando variável */
+    /* ADIÇÕES PARA FIXAR O CABEÇALHO */
+    position: fixed; /* Fixa o elemento na tela */
+    top: 0; /* Alinha no topo */
+    width: 100%; /* Ocupa toda a largura */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+}
+
+.main-header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Permite quebrar em telas menores */
+}
+
+.main-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    /* A cor será aplicada via .site-name diretamente */
+}
+
+/* NOVO: Estilos para o logotipo */
+.main-header .logo-img {
+    height: 40px; /* Ajuste o tamanho conforme necessário */
+    margin-right: 10px;
+    vertical-align: middle; /* Alinha a imagem com o texto */
+}
+
+/* NOVO: Estilo para o nome do site (h1 e o link dentro dele) */
+.main-header .site-name {
+    color: var(--site-name-color); /* Aplica a cor customizada ao nome do site */
+    text-decoration: none; /* Garante que o link não seja sublinhado */
+    display: flex; /* Para alinhar a imagem e o texto */
+    align-items: center; /* Centraliza verticalmente a imagem e o texto */
+    font-weight: bold; /* Garante que o texto do nome do site seja bold */
+}
+
+.main-header .site-name:hover {
+    color: var(--site-name-color); /* Mantém a cor no hover para o nome do site */
+    opacity: 0.9; /* Pequeno efeito visual no hover */
+}
+
+.main-header nav ul {
+    list-style: none;
+    display: flex;
+    margin-top: 5px; /* Ajuste para espaçamento em mobile */
+}
+
+.main-header nav ul li {
+    margin-left: 20px;
+    position: relative;
+}
+
+.main-header nav ul li a {
+    color: var(--header-link-color); /* Usa a variável para os links do cabeçalho */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.main-header nav ul li a:hover {
+    color: var(--color-primary); /* Usando variável */
+}
+
+.cart-counter {
+    background-color: var(--color-secondary); /* Usando variável */
+    color: var(--color-text-light); /* Usando variável */
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%; /* Faz a forma circular */
+    padding: 2px 6px; /* Ajusta o tamanho do contador */
+    position: absolute; /* Posiciona o contador em relação ao item da lista */
+    top: -8px; /* Ajusta a posição vertical */
+    right: -12px; /* Ajusta a posição horizontal */
+    min-width: 20px; /* Garante que o círculo não seja muito pequeno */
+    text-align: center;
+    line-height: 1; /* Alinha o número verticalmente */
+    display: none; /* Inicia oculto, será mostrado via JS se houver itens */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Poderia ser uma variável, mas mantive como está */
+}
+
+/* Hero Section */
+.hero {
+    background-color: var(--color-primary); /* Usando variável */
+    color: var(--color-dark-bg); /* Usando nova variável para cor de texto em fundos primários */
+    padding: 4rem 0;
+    text-align: center;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium); /* Usando variável */
+}
+
+.hero h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 1.2rem;
+}
+
+/* Seção de Produtos */
+.products-section {
+    background-color: var(--color-text-light); /* Usando variável */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium); /* Usando variável */
+    margin-bottom: 30px;
+}
+
+.products-section h3 {
+    font-size: 2rem;
+    margin-bottom: 25px;
+    text-align: center;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+/* Grid de Produtos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+/* Card de Produto */
+.product-card {
+    background-color: var(--color-text-light); /* Usando variável */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* Poderia ser uma variável */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    padding-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Estilo para o link do card do produto */
+.product-card .product-link {
+    text-decoration: none; /* Remove o sublinhado */
+    color: inherit; /* Garante que a cor do texto seja herdada do pai */
+    display: flex; /* Para manter o layout flex do card */
+    flex-direction: column; /* Para manter o layout flex do card */
+    height: 100%; /* Para que o link ocupe todo o card */
+}
+
+.product-card.highlight {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--shadow-heavy); /* Usando variável */
+    border-color: var(--color-primary); /* Usando variável */
+}
+
+.product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+.product-card h2 {
+    font-size: 1.5rem;
+    margin: 0 15px 10px;
+    color: var(--color-text-dark); /* Usando --color-text-dark para garantir contraste */
+}
+
+/* Ajuste: Aumentar a fonte da descrição */
+.product-card .product-link .product-description {
+    font-size: 1rem; /* Aumentado de 0.95rem para 1rem */
+    color: #666; /* Poderia ser uma variável */
+    margin: 0 15px 15px;
+    flex-grow: 1; /* Faz a descrição ocupar o espaço disponível */
+}
+
+/* Ajuste: Melhorar o estilo do preço */
+.product-card .product-price { /* Seletor corrigido para o preço dentro do link */
+    font-size: 1.8rem; /* Aumentado de 1.6rem para 1.8rem */
+    font-weight: bold; /* Já era bold, mas confirmando */
+    color: var(--color-secondary); /* Usando variável */
+    margin-bottom: 15px;
+}
+
+/* Estilo específico para o botão dentro do link do produto */
+.product-card .product-link .buy-button {
+    display: inline-block;
+    background-color: var(--button-color); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL */
+    color: var(--color-text-light); /* Usando variável */
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    margin-top: auto;
+}
+
+.product-card .product-link .buy-button:hover {
+    background-color: var(--button-color-hover); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL PARA HOVER */
+    color: var(--color-text-light); /* Usando variável */
+}
+
+/* Mensagens de feedback */
+.message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.message.loading {
+    background-color: #e0f7fa; /* Poderia ser uma variável */
+    color: #00796b; /* Poderia ser uma variável */
+}
+
+.message.error {
+    background-color: #ffe0e0; /* Poderia ser uma variável */
+    color: #d32f2f; /* Poderia ser uma variável */
+}
+
+/* Rodapé (Footer) */
+.main-footer {
+    background-color: var(--footer-background-color); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL */
+    color: var(--footer-text-color); /* Usa a variável para o texto do rodapé */
+    text-align: center;
+    padding: 1.5rem 0;
+    margin-top: 40px;
+    box-shadow: var(--shadow-light); /* Usando variável */
+}
+
+.main-footer p {
+    margin: 0;
+}
+
+/* Estilo para o botão de pagamento no checkout */
+#submit-payment-btn {
+    background-color: var(--button-color); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL */
+    color: var(--color-text-light); /* Texto branco */
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Garante que ocupe a largura total do contêiner */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#submit-payment-btn:hover {
+    background-color: var(--button-color-hover); /* AGORA USA A VARIÁVEL CUSTOMIZÁVEL PARA HOVER */
+    transform: translateY(-2px); /* Efeito sutil de "levantar" */
+}
+
+#submit-payment-btn:active {
+    background-color: var(--button-color-active); /* Usa a nova variável para o active */
+    transform: translateY(0); /* Retorna à posição original */
+}
+
+/* Estilos para os botões do carrinho (cart.html) */
+/* Botão Finalizar Compra (ATIVO) - Azul Anil */
+.btn-checkout {
+    background-color: var(--color-accent); /* Usa a variável customizável */
+    color: var(--color-text-light);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none; /* Porque é um <a> */
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.btn-checkout:hover {
+    background-color: var(--button-color-hover); /* Tom mais escuro no hover para o azul anil */
+}
+
+/* Botão Finalizar Compra (DESABILITADO) - Cinza */
+.btn-checkout.disabled {
+    background-color: #ccc !important; /* Força o cinza quando desabilitado */
+    cursor: not-allowed; /* Cursor de "não permitido" */
+    opacity: 0.7; /* Transparência para indicar desabilitação visualmente */
+    pointer-events: none; /* Impede o clique */
+    text-decoration: none; /* Garante que o link não seja clicável */
+}
+
+/* Botão Continuar Comprando (Rosa) */
+.btn-continue-shopping {
+    background-color: var(--color-secondary); /* Cor rosa de destaque */
+    color: var(--color-text-light);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    text-decoration: none; /* Porque é um <a> */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-continue-shopping:hover {
+    background-color: #d33c64; /* Tom mais escuro no hover para o rosa */
+}
+
+/* ======================================================= */
+/* ESTILOS DA PÁGINA DE PRODUTO (MIGRADOS DE product-style.css) */
+/* ======================================================= */
+/* Ajustes específicos para o corpo da página de produto */
+.product-page {
+    /* AJUSTADO AQUI: Removido o padding-top para evitar espaçamento duplo */
+    padding-bottom: 50px;
+}
+
+/* Mensagens de Carregamento e Erro */
+.loading-message, .error-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.loading-message {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.error-message {
+    background-color: #ffe0e0;
+    color: #d32f2f;
+}
+
+/* Conteúdo Principal do Produto */
+#product-content {
+    display: flex;
+    flex-wrap: wrap; /* Mantido para telas menores */
+    gap: 40px; /* Mantido para telas menores */
+    background-color: var(--color-text-light); /* Usando variável */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium); /* Usando variável */
+}
+
+/* Seção de Média do Produto (Carrossel de Imagens) */
+.product-media {
+    /* REMOVIDO: flex: 1 1 45%; */ /* Não mais necessário, pois ocupará 100% */
+    width: 100%; /* NOVO: Garante 100% de largura */
+    /* REMOVIDO: min-width: 300px; */ /* Não necessário com width: 100% */
+    position: relative;
+    overflow: hidden; /* ALTERADO para hidden para conter as miniaturas dentro */
+    border-radius: 8px;
+    box-shadow: var(--shadow-light); /* Usando variável */
+    margin-bottom: 60px; /* NOVO: Adiciona espaço abaixo do carrossel para os próximos elementos */
+}
+
+.image-carousel-container {
+    position: relative;
+    width: 100%;
+    /* AJUSTE AQUI: Aumentar o padding-bottom para o carrossel ocupar mais espaço */
+    padding-bottom: 90%; /* Ajustado de 75% para 90% para ocuupar mais espaço vertical */
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden; /* ALTERADO para hidden para conter as miniaturas */
+}
+
+.image-carousel-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.image-carousel-main img {
+    position: absolute;
+    width: 100%;
+    height: 100%; /* A altura agora será 100% para preencher o container */
+    object-fit: contain; /* Garante que a imagem seja totalmente visível */
+    transition: opacity 0.5s ease;
+    opacity: 0; /* Começa oculto */
+    z-index: 0;
+    cursor: zoom-in;
+}
+
+.image-carousel-main img.active { /* Certifique-se que essa classe está sendo usada pelo JS */
+    opacity: 1; /* A imagem ativa visível */
+    z-index: 1;
+}
+
+.carousel-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    border-radius: 50%;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prev-button {
+    left: 10px;
+}
+
+.next-button {
+    right: 10px;
+}
+
+/* NOVO: Estilos para as miniaturas do carrossel principal */
+.image-carousel-thumbnails {
+    display: flex; /* Garante que as miniaturas fiquem em linha */
+    justify-content: center; /* Centraliza as miniaturas horizontalmente */
+    gap: 10px; /* Espaçamento entre as miniaturas */
+    position: absolute; /* Permite posicionar em relação ao pai `.image-carousel-container` */
+    bottom: 720px; /* ALTERADO: Miniaturas 720px acima da base do carrossel */
+    left: 0;
+    width: 100%;
+    overflow-x: auto; /* Permite rolagem horizontal se houver muitas miniaturas */
+    padding-bottom: 5px; /* Espaço para a barra de rolagem, se visível */
+    z-index: 2; /* Garante que as miniaturas fiquem acima de elementos atrás (se houver) */
+    background-color: rgba(255, 255, 255, 0.6); /* Fundo semi-transparente para as miniaturas */
+    padding-top: 5px; /* Espaçamento interno */
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+}
+
+.image-carousel-thumbnails img {
+    width: 70px; /* Tamanho fixo para miniaturas */
+    height: 70px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: border-color 0.3s ease, transform 0.2s ease;
+}
+
+.image-carousel-thumbnails img.active-thumbnail {
+    border-color: var(--color-primary); /* Destaca a miniatura ativa */
+    transform: scale(1.05);
+}
+
+/* Seção de Informações do Produto */
+.product-info {
+    flex: 1 1 100%; /* NOVO: Ocupa a largura total para ficar abaixo do carrossel */
+    min-width: unset; /* Remove min-width */
+    display: flex;
+    flex-direction: column;
+}
+
+.product-info h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+.product-info .product-short-description {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.product-info .product-price {
+    font-size: 2.8rem;
+    font-weight: bold;
+    color: var(--color-secondary); /* Usando variável */
+    margin-bottom: 25px;
+}
+
+/* Opções de Produto (Tamanhos) */
+.product-options label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.size-options-grid {
+    display: flex; /* Altera para flex para botões de rádio em linha */
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.size-option {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.size-option:hover {
+    background-color: #e9e9e9;
+    border-color: var(--color-primary); /* Usando variável */
+}
+
+.size-option input[type="radio"] {
+    display: none; /* Esconde o radio button nativo */
+}
+
+/* A mudança no estilo de input[type="radio"]:checked + label */
+/* Esta regra é para o LABEL do radio button quando selecionado */
+.size-option input[type="radio"]:checked + label {
+    background-color: var(--color-primary); /* Usando variável */
+    color: var(--color-dark-bg); /* Usando nova variável para contraste */
+    border-color: var(--color-dark-bg); /* Ajustado para melhor contraste */
+    font-weight: bold;
+    padding: 0; /* Garante que o padding vem do pai .size-option */
+    margin: 0;
+}
+
+.size-option label {
+    cursor: pointer;
+    padding: 0; /* Remove padding duplicado se já está no div */
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Ações do Produto (Formulário de Compra e Botão de Carrinho) */
+.product-actions {
+    display: flex;
+    flex-direction: column; /* Padrão para empilhar em telas pequenas */
+    gap: 15px; /* Espaçamento entre os elementos (form e botão) */
+    margin-top: 20px; /* Adicionado para espaçar da seção de tamanhos */
+    margin-bottom: 0; /* NOVO: Remove margem inferior para aproximar do HR */
+}
+
+.product-actions form {
+    display: flex;
+    flex-direction: column; /* Mantém os elementos do formulário empilhados */
+    gap: 10px; /* Espaçamento entre email input e buy button */
+    flex-grow: 1; /* Permite que o formulário cresça */
+}
+
+.product-actions label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.product-actions input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    /* margin-bottom: 10px; Removido, já temos o gap no form */
+}
+
+/* Botões da Página de Produto */
+.buy-button-product-page { /* Renomeado para evitar conflito com .buy-button do product-card */
+    background-color: var(--button-color); /* Usando variável */
+    color: var(--color-text-light);
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Garante que ocupe a largura do seu contêiner */
+    box-sizing: border-box; /* Inclui padding e borda na largura */
+}
+
+.buy-button-product-page:hover {
+    background-color: var(--button-color-hover); /* Usando variável */
+    transform: translateY(-2px);
+}
+
+/* NOVO ESTILO: Botão Adicionar ao Carrinho */
+.add-to-cart-button {
+    background-color: var(--color-primary); /* Usando variável (azul mais claro) */
+    color: var(--color-dark-bg); /* Texto escuro para contraste */
+    padding: 15px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%; /* Garante que ocupe a largura do seu contêiner */
+    box-sizing: border-box; /* Inclui padding e borda na largura */
+}
+
+.add-to-cart-button:hover {
+    background-color: #4fa3d1; /* Tom mais escuro de azul (manter fixo ou criar nova variável se for padrão) */
+    transform: translateY(-2px);
+}
+
+/* Prova Social */
+.social-proof {
+    display: none; /* NOVO: Esconde o div .social-proof já que o conteúdo foi removido no HTML */
+}
+
+/* Descrição Longa do Produto */
+.product-long-description {
+    flex: 1 1 100%; /* Ocupa a largura total abaixo das seções principais */
+    margin-top: 8px; /* AJUSTADO: De 5px para 8px para subir mais */
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.product-long-description h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+.product-long-description #product-long-description-content {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #444;
+}
+
+/* Seção de Produtos Relacionados (Carrossel) */
+.related-products {
+    flex: 1 1 100%; /* Ocupa a largura total */
+    margin-top: -5px; /* ALTERADO: Para -5px, puxa para cima */
+    margin-bottom: 40px; /* Mantém espaço para a próxima seção */
+}
+
+.related-products h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--color-text-dark);
+}
+
+/* Badges de Segurança */
+.security-badges {
+    flex: 1 1 100%;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.security-badges h4 {
+    font-size: 1.5rem;
+    margin-bottom: 25px;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+.security-badges .badges-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.security-badges .badge-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 120px; /* Largura fixa para os itens */
+}
+
+.security-badges .badge-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border-radius: 5px; /* Adicionado um border-radius para os ícones */
+}
+
+.security-badges .badge-item span {
+    font-size: 0.9rem;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Avaliações de Clientes */
+.customer-reviews {
+    flex: 1 1 100%;
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.customer-reviews h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+.reviews-summary {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.stars-display {
+    color: #ffc107; /* Cor das estrelas */
+    font-size: 1.4rem;
+}
+
+.star-empty {
+    color: #ccc;
+}
+
+.average-rating {
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.total-reviews {
+    color: #777;
+    margin-left: 5px;
+}
+
+.review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.review-item {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-author {
+    font-weight: bold;
+    color: var(--color-text-dark); /* Usando variável */
+}
+
+.review-text {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Modal de Zoom da Imagem */
+.image-zoom-modal {
+    display: none; /* Oculto por padrão */
+    position: fixed; /* Fixado na tela */
+    z-index: 1000; /* Acima de todo o conteúdo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9); /* Fundo escuro semitransparente */
+    justify-content: center;
+    align-items: center;
+}
+
+.image-zoom-modal .modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain; /* Garante que a imagem se ajuste ao modal */
+}
+
+.image-zoom-modal .close-button {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.image-zoom-modal .close-button:hover,
+.image-zoom-modal .close-button:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* A cor do h2 do modal será definida pela variável --site-name-color via .site-name */
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.modal-buttons button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.modal-buttons .button { /* Estilo para o botão "Continuar Comprando" */
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.modal-buttons .button:hover {
+    background-color: #e0e0e0;
+}
+
+.modal-buttons .primary-button { /* Estilo para o botão "Visualizar Carrinho" */
+    background-color: var(--button-color, #007bff); /* Usa --button-color */
+    color: white;
+}
+
+.modal-buttons .primary-button:hover {
+    background-color: var(--button-color-hover, #0056b3); /* Usa uma variação de --button-color */
+}
+
+/* NOVO: Estilo para o separador de seção (HR) */
+.section-separator {
+    border: none; /* Remove a borda padrão do hr */
+    border-top: 1px solid #eee; /* Adiciona uma linha superior sutil */
+    margin: 1px auto; /* ALTERADO: Para 1px acima e abaixo */
+    box-sizing: content-box; /* Garante que o padding não afete a largura */
+}
+
+/* NOVO: Estilo para o retângulo do carrinho, caso ele esteja aparecendo de forma indesejada */
+/* Este é um palpite. Se este elemento não for o culpado, precisamos de mais detalhes sobre ele. */
+/* REMOVIDO OU MANTIDO EM DISPLAY NONE DEPENDENDO DA NECESSIDADE */
+.cart-rectangle-below-footer {
+    /* display: none !important; */
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .cart-counter {
+        top: -5px; /* Ajuste para mobile */
+        right: -5px; /* Ajuste para mobile */
+    }
+
+    #product-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .product-media, .product-info {
+        min-width: unset;
+        width: 100%;
+    }
+
+    .product-info h1 {
+        font-size: 2rem;
+    }
+
+    .product-info .product-price {
+        font-size: 2.2rem;
+    }
+
+    /* Em telas menores, os botões permanecem empilhados (com flex-direction: column no .product-actions) */
+    .buy-button-product-page, .add-to-cart-button { /* Ajustado o seletor para o botão de compra */
+        padding: 12px 20px;
+        font-size: 1.1rem;
+    }
+
+    .product-long-description { /* AJUSTADO: Aproxima "Saiba mais" para telas pequenas */
+        margin-top: 8px; /* De 5px para 8px */
+        padding-top: 20px;
+    }
+
+    .security-badges, .customer-reviews {
+        margin-top: 30px;
+        padding-top: 20px;
+    }
+
+    .security-badges .badges-grid {
+        gap: 20px;
+    }
+
+    .review-item {
+        padding: 15px;
+    }
+
+    /* As miniaturas agora serão sempre visíveis, então removemos o display: none */
+    .image-carousel-thumbnails {
+        display: flex; /* Garante que elas apareçam */
+        bottom: 720px; /* Mantém a posição para mobile também */
+    }
+
+    .image-carousel-thumbnails img {
+        width: 50px; /* Miniaturas menores para mobile */
+        height: 50px;
+    }
+
+    /* NOVO: Ajuste para o .section-separator em telas pequenas */
+    .section-separator {
+        margin: 1px auto; /* ALTERADO: Para 1px em telas pequenas */
+    }
+
+    .related-products {
+        margin-top: -5px; /* ALTERADO: Para -5px, puxa para cima em telas pequenas */
+        margin-bottom: 30px; /* Ajuste para telas pequenas */
+    }
+}
+
+/* Media Query para telas maiores */
+@media (min-width: 769px) {
+    .product-actions {
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-end;
+        gap: 20px;
+    }
+
+    .product-actions form {
+        width: auto;
+        flex-grow: 0;
+    }
+
+    .product-actions input[type="email"] {
+        max-width: 250px;
+    }
+
+    .buy-button-product-page, .add-to-cart-button {
+        width: auto;
+        min-width: 200px;
+    }
+
+    /* As miniaturas devem ser visíveis e na posição correta em telas maiores */
+    .image-carousel-thumbnails {
+        display: flex; /* Garante que elas apareçam novamente em telas maiores */
+        bottom: 720px; /* Mantém a posição para telas maiores */
+    }
+
+    .related-products {
+        margin-top: -5px; /* ALTERADO: Para -5px, puxa para cima em telas maiores */
+    }
+}
+
+/* ======================================================= */
+/* ESTILOS DA PÁGINA DO CARRINHO (MIGRADOS DE cart-style.css) */
+/* ======================================================= */
+.cart-container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+    overflow-x: hidden;
+}
+
+.cart-container h2 {
+    text-align: center;
+    color: var(--color-text-dark); /* Ajustado para usar --color-text-dark */
+    margin-bottom: 30px;
+}
+
+/* Mensagem de carrinho vazio */
+#empty-cart-message {
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    margin-bottom: 20px;
+}
+
+#empty-cart-message a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Container dos itens do carrinho */
+.cart-items-container {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+/* Estilo individual de cada item do carrinho */
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    gap: 15px;
+    background-color: var(--color-white);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    flex-wrap: nowrap;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+/* Imagem do item no carrinho */
+.cart-item-image {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Detalhes do item (nome, preço, quantidade) */
+.cart-item-details {
+    flex-grow: 1;
+    min-width: 150px;
+}
+
+.cart-item-name {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+}
+
+.cart-item-price {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--color-text-dark);
+    opacity: 0.8;
+}
+
+/* Controles de quantidade (+/-) */
+.cart-item-quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.quantity-btn {
+    background-color: var(--color-light);
+    border: 1px solid #ccc;
+    color: var(--color-text-dark);
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.quantity-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.cart-item-quantity {
+    min-width: 25px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--color-text-dark);
+}
+
+/* Preço total do item individual */
+.cart-item-total {
+    font-weight: bold;
+    font-size: 1.1em;
+    color: var(--color-primary);
+    min-width: 90px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Botão Remover */
+.remove-item-btn {
+    background-color: #dc3545; /* Vermelho padrão para remover */
+    color: var(--color-text-light);
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.remove-item-btn:hover {
+    background-color: #c82333;
+}
+
+/* Resumo do carrinho */
+.cart-summary {
+    background-color: var(--color-light);
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: var(--shadow-light);
+}
+
+.cart-summary p {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    font-size: 1.1em;
+    color: var(--color-text-dark);
+}
+
+.cart-summary hr {
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin: 15px 0;
+}
+
+.cart-summary .total-amount {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+/* Ações do carrinho (botões) */
+.cart-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .cart-item {
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .cart-item-image {
+        margin: 0 auto 10px auto;
+    }
+
+    .cart-item-details {
+        text-align: center;
+        padding-right: 0;
+        min-width: unset;
+        width: 100%;
+    }
+
+    .cart-item-quantity-controls {
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .cart-item-total {
+        width: 100%;
+        text-align: center;
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .remove-item-btn {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .cart-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .cart-actions .btn {
+        width: 100%;
+    }
+}
+
+/* ======================================================= */
+/* ESTILOS DA PÁGINA ADMIN (MIGRADOS DE admin-layout.css) */
+/* ======================================================= */
+/* Ajustes gerais para o corpo do admin */
+body.admin-page { /* Adicionada uma classe ao body para estilos específicos do admin */
+    font-family: var(--admin-font-family);
+    background-color: var(--admin-bg-color);
+    color: var(--admin-text-color);
+    padding-top: 0; /* O header do admin não é fixo, então remove o padding do body */
+}
+
+/* Header do Admin */
+.admin-header {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-card-bg);
+    padding: 1.5rem 0; /* Ajustado padding */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15); /* Sombra mais suave */
+    margin-bottom: 30px;
+}
+
+.admin-header .container { /* NOVO: Usando Flexbox para o container do header */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Para responsividade */
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 2em; /* Um pouco menor para melhor ajuste com os links */
+    color: var(--color-white); /* Garante que o H1 seja branco */
+}
+
+.admin-header nav {
+    /* float: right; REMOVIDO */
+    margin-top: 0; /* Removido margin-top que não é mais necessário com flexbox */
+}
+
+.admin-header nav a {
+    color: var(--admin-card-bg);
+    text-decoration: none;
+    font-size: 1em;
+    padding: 8px 15px;
+    border: 1px solid rgba(255,255,255,0.7); /* Borda mais visível */
+    border-radius: 5px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-left: 10px;
+}
+
+.admin-header nav a:hover {
+    background-color: rgba(255,255,255,0.3); /* Um pouco mais transparente no hover */
+    border-color: var(--color-white); /* Borda branca total no hover */
+}
+
+.admin-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-bottom: 50px;
+}
+
+/* Seções do Admin */
+.admin-section {
+    background-color: var(--admin-card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    border: 1px solid var(--admin-border-color);
+}
+
+.admin-section h2 {
+    color: var(--admin-secondary-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 2px solid var(--admin-border-color);
+    padding-bottom: 10px;
+}
+
+/* Estilo de Formulário do Admin */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--admin-text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group input[type="color"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--admin-border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="file"] {
+    padding: 5px;
+}
+
+.form-group input[type="color"] {
+    height: 40px;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.form-group input:focus {
+    border-color: var(--admin-primary-color);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+button[type="submit"] {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-card-bg);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    width: auto;
+    min-width: 150px;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+button[type="submit"]:disabled {
+    background-color: #6c757d;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Mensagens de Status do Admin */
+.status-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    display: none;
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+.info-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+.info-message.hidden {
+    display: none;
+}
+
+.small-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 15px;
+}
+
+/* Estilos da Lista de Imagens do Admin */
+.image-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+    padding-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--admin-border-color);
+    border-radius: 5px;
+    padding: 15px;
+    background-color: var(--admin-bg-color);
+}
+
+.image-item {
+    border: 1px solid var(--admin-border-color);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background-color: var(--admin-card-bg);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    width: 150px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.image-item img {
+    max-width: 100%;
+    height: 100px;
+    object-fit: contain;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+.image-item p {
+    font-size: 0.85em;
+    word-break: break-all;
+    margin: 0 0 10px 0;
+    color: var(--admin-text-color);
+}
+
+.image-item button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.image-item button:hover {
+    background-color: #c82333;
+}
+
+/* Remote Log Display - Same as main script for consistency */
+#page-logs {
+    background-color: #333;
+    color: #eee;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 0.8em;
+    margin-top: 30px;
+}
+
+.log-entry.info { color: #87ceeb; }
+.log-entry.warn { color: #ffd700; }
+.log-entry.error { color: #ff6347; }
+.log-entry.debug { color: #98fb98; }
+
+/* Media Queries para Admin */
+@media (max-width: 768px) {
+    .admin-main-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .admin-section {
+        min-width: unset; /* Remove min-width fixo para mobile */
+        max-width: 100%; /* Garante que ocupe a largura total */
+    }
+
+    .admin-header .container { /* Ajuste para header em telas menores */
+        flex-direction: column;
+        align-items: flex-start; /* Alinha o título à esquerda */
+        gap: 10px; /* Espaçamento entre título e navegação */
+    }
+
+    .admin-header nav {
+        width: 100%; /* Navegação ocupa a largura total */
+        text-align: center; /* Centraliza os links */
+    }
+
+    .admin-header nav a {
+        display: block; /* Links um abaixo do outro */
+        margin: 5px 0; /* Espaçamento vertical entre os links */
+    }
+}
+
+/* Media Query para telas maiores, para layout de 2 colunas */
+@media (min-width: 769px) {
+    .admin-main-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .admin-section {
+        flex: 1;
+        min-width: 45%;
+        max-width: 48%;
+    }
+}
+
+/* ======================================================= */
+/* ESTILOS DO MODAL (MOVIDOS DO INLINE <style> BLOCK) */
+/* ======================================================= */
+.modal {
+    display: none; /* Escondido por padrão */
+    position: fixed; /* Fica por cima de tudo */
+    z-index: 1000; /* Z-index alto para ficar acima de outros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilita rolagem se o conteúdo for muito grande */
+    background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centraliza */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Largura padrão */
+    max-width: 400px; /* Largura máxima */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    position: relative;
+    text-align: center;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Animação do modal */
+@keyframes animatetop {
+    from {top: -300px; opacity: 0}
+    to {top: 0; opacity: 1}
+}
+
+.modal-content .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.modal-content .close-button:hover,
+.modal-content .close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* A cor do h2 do modal será definida pela variável --site-name-color via .site-name */
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content p {
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.modal-buttons button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.modal-buttons .button { /* Estilo para o botão "Continuar Comprando" */
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+}
+
+.modal-buttons .button:hover {
+    background-color: #e0e0e0;
+}
+
+.modal-buttons .primary-button { /* Estilo para o botão "Visualizar Carrinho" */
+    background-color: var(--button-color, #007bff); /* Usa --button-color */
+    color: white;
+}
+
+.modal-buttons .primary-button:hover {
+    background-color: var(--button-color-hover, #0056b3); /* Usa uma variação de --button-color */
+}
+
+/* NOVO: Estilo para o separador de seção (HR) */
+.section-separator {
+    border: none; /* Remove a borda padrão do hr */
+    border-top: 1px solid #eee; /* Adiciona uma linha superior sutil */
+    margin: 1px auto; /* ALTERADO: Para 1px acima e abaixo */
+    box-sizing: content-box; /* Garante que o padding não afete a largura */
+}
+
+/* NOVO: Estilo para o retângulo do carrinho, caso ele esteja aparecendo de forma indesejada */
+/* Este é um palpite. Se este elemento não for o culpado, precisamos de mais detalhes sobre ele. */
+/* REMOVIDO OU MANTIDO EM DISPLAY NONE DEPENDENDO DA NECESSIDADE */
+.cart-rectangle-below-footer {
+    /* display: none !important; */
+}

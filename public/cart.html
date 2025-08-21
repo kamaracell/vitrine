@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Carrinho - <span class="site-name">Vitrine Virtual</span></title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container cart-container">
+        <h2>Seu Carrinho de Compras</h2>
+
+        <p id="empty-cart-message" style="display: none;">
+            Seu carrinho está vazio. <a href="/">Comece a comprar agora!</a>
+        </p>
+
+        <div id="cart-items-container" class="cart-items-container">
+        </div>
+
+        <div class="cart-summary">
+            <p>Subtotal: <span id="cart-subtotal">R$ 0,00</span></p>
+            <p>Frete: <span id="cart-shipping">R$ 0,00</span></p>
+            <p class="total-amount">Total: <span id="cart-total">R$ 0,00</span></p>
+        </div>
+
+        <div class="cart-actions">
+            <a href="/" class="btn btn-continue-shopping">Continuar Comprando</a>
+            <a href="/checkout.html" class="btn btn-checkout" id="checkout-button">Finalizar Compra</a>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 <span class="site-name">Minha Loja Virtual</span>. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="/header-loader.js"></script>
+    <script src="/cart-script.js"></script>
+    <script src="/layout-loader.js"></script>
+</body>
+</html>

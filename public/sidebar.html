@@ -1,0 +1,38 @@
+<button id="menuIcon" class="menu-icon">&#9776;</button>
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <button id="toggleBtn" class="toggle-btn close-btn">&times;</button>
+    </div>
+    <ul class="sidebar-menu">
+        <li>
+            <a href="../admin-geral.html">
+                <span class="icon icon-dashboard"></span>
+                <span class="link-text">Visão Geral</span>
+            </a>
+        </li>
+        <li>
+            <a href="../admin/products">
+                <span class="icon icon-products"></span>
+                <span class="link-text">Produtos</span>
+            </a>
+        </li>
+        <li>
+            <a href="step1.html" onclick="sessionStorage.removeItem('newProductData');">
+                <span class="icon icon-new-product"></span>
+                <span class="link-text">Novo Produto</span>
+            </a>
+        </li>
+        <li>
+            <a href="../admin/layout">
+                <span class="icon icon-layout"></span>
+                <span class="link-text">Layout</span>
+            </a>
+        </li>
+        <li>
+            <a href="#" id="logoutBtn">
+                <span class="icon icon-logout"></span>
+                <span class="link-text">Sair</span>
+            </a>
+        </li>
+    </ul>
+</div>

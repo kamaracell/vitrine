@@ -1,0 +1,344 @@
+/* public/checkout.css */
+
+/* Reset básico e box-sizing global */
+*, *::before, *::after {
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura/altura */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    overflow-x: hidden; /* Evita barra de rolagem horizontal indesejada */
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    width: 100%; /* Garante que o container use a largura total disponível até o max-width */
+}
+
+/* Header */
+.main-header {
+    background-color: #343a40;
+    color: #ffffff;
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.main-header nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-header .logo {
+    color: #61dafb;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.main-header .logo:hover {
+    color: #4cd1f7;
+}
+
+.main-header ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 25px;
+}
+
+.main-header ul li a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 1.1em;
+    padding: 5px 0;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.main-header ul li a:hover {
+    color: #e0e0e0;
+}
+
+.cart-counter {
+    background-color: #ff0000;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 7px;
+    font-size: 0.8em;
+    vertical-align: super;
+    margin-left: 5px;
+}
+
+/* Main Content */
+main {
+    padding: 40px 0;
+}
+
+.checkout-main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px; /* Garante padding interno e evita colagem nas bordas da tela */
+}
+
+/* Seções de Resumo e Entrega */
+.checkout-summary-section,
+.shipping-section,
+.payment-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    /* Ajustes de flex-basis para melhor responsividade e evitar barra */
+    flex-basis: calc(50% - 15px); /* Tenta dividir em duas colunas com gap */
+    min-width: 300px; /* Mínimo para não quebrar muito cedo */
+    flex-grow: 1; /* Permite que cresçam para preencher o espaço */
+}
+/* Força a quebra para a seção de entrega ser maior, se necessário */
+.shipping-section {
+    flex-basis: calc(65% - 15px); /* Mais espaço para o formulário */
+    min-width: 400px;
+}
+.checkout-summary-section {
+    flex-basis: calc(35% - 15px); /* Menos espaço para o resumo */
+    min-width: 300px;
+}
+
+
+h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+/* Lista de Itens do Checkout */
+.checkout-items-list {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.checkout-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #fafafa;
+    /* Adicionado max-width para garantir que não ultrapasse o pai */
+    max-width: 100%;
+}
+
+.checkout-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.checkout-item .item-details {
+    flex-grow: 1;
+    text-align: left;
+    /* Adicionado min-width: 0 para evitar estouro de conteúdo longo */
+    min-width: 0;
+}
+
+.checkout-item .item-details h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.1em;
+    color: #555;
+    word-wrap: break-word; /* Quebra palavras longas */
+}
+
+.checkout-item .item-details p {
+    margin: 3px 0;
+    font-size: 0.9em;
+    color: #666;
+    word-wrap: break-word;
+}
+
+/* Totais do resumo */
+.summary-totals {
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+}
+
+.summary-totals p {
+    margin: 8px 0;
+    font-size: 1.1em;
+}
+
+.summary-totals h3 {
+    font-size: 1.6em;
+    margin-top: 15px;
+    color: #007bff;
+}
+
+/* Formulários */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permite que os campos quebrem para a próxima linha em telas pequenas */
+}
+
+.form-group.half-width {
+    flex: 1;
+    min-width: 150px; /* Garante que os campos não fiquem muito pequenos */
+}
+
+.form-group.full-width {
+    width: 100%;
+}
+
+.form-group.location-group {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap; /* Permite que cidade/estado/cep quebrem */
+}
+
+.form-group.location-group > div {
+    flex: 1;
+    min-width: 100px; /* Garante que campos como CEP não fiquem muito apertados */
+}
+
+
+/* Botões */
+.btn {
+    display: inline-block;
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Footer */
+.main-footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 50px;
+    font-size: 0.9em;
+}
+
+/* Media Queries para responsividade */
+@media (max-width: 992px) {
+    .checkout-main-content {
+        flex-direction: column; /* Pilha as seções em telas menores */
+        gap: 20px;
+        padding: 0 15px; /* Ajusta padding para telas menores */
+    }
+
+    .checkout-summary-section,
+    .shipping-section {
+        min-width: unset; /* Remove o min-width para permitir que se ajustem */
+        width: 100%;
+        flex-basis: auto; /* Reseta flex-basis */
+    }
+}
+
+@media (max-width: 600px) {
+    .main-header nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .main-header ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .checkout-item {
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+    }
+
+    .checkout-item img {
+        margin-bottom: 10px;
+    }
+
+    .form-row, .form-group.location-group {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .form-group.half-width, .form-group.location-group > div {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .payment-options {
+        flex-direction: column;
+    }
+
+    .container {
+        padding: 0 10px; /* Mais ajuste de padding para telas muito pequenas */
+    }
+}

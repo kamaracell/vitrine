@@ -1,0 +1,74 @@
+<section class="admin-content-section">
+    <h2>Cadastro de Produto - Passo 1</h2>
+    <form id="step1Form">
+        <label for="product_code">Código do Produto:</label>
+        <input type="text" id="product_code" name="product_code" readonly>
+        <label for="name">Nome do Produto:</label>
+        <input type="text" id="name" name="name" required>
+        <button type="submit" id="nextButton" disabled>Próximo</button>
+    </form>
+    <div id="statusMessage"></div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKikDSwM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const productCodeInput = document.getElementById('product_code');
+        const nextButton = document.getElementById('nextButton');
+        const statusMessageDiv = document.getElementById('statusMessage');
+        const step1Form = document.getElementById('step1Form');
+        
+        function showStatusMessage(message, type) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = type;
+            statusMessageDiv.style.display = 'block';
+        }
+
+        async function getNextProductCode() {
+            showStatusMessage('Gerando código do produto...', 'info');
+            try {
+                const { data, error } = await supabase.from('products').select('product_code');
+                if (error) throw error;
+
+                let maxNumber = 0;
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        const code = item.product_code;
+                        const number = parseInt(code.replace('PROD-', ''), 10);
+                        if (!isNaN(number) && number > maxNumber) {
+                            maxNumber = number;
+                        }
+                    });
+                }
+                const nextNumber = maxNumber + 1;
+                const nextCode = `PROD-${String(nextNumber).padStart(4, '0')}`;
+                productCodeInput.value = nextCode;
+                showStatusMessage('Código gerado com sucesso!', 'success');
+                nextButton.disabled = false;
+            } catch (err) {
+                console.error('Erro ao buscar o próximo código do produto:', err.message);
+                showStatusMessage('Erro ao gerar o código do produto. Por favor, verifique a conexão com o Supabase.', 'error');
+                productCodeInput.value = 'PROD-ERRO';
+            }
+        }
+        
+        getNextProductCode();
+
+        step1Form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const product_code = productCodeInput.value;
+            const name = document.getElementById('name').value;
+            const productData = {
+                product_code,
+                name
+            };
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+            
+            // Navega para o próximo passo usando o novo sistema de carregamento de página
+            window.loadPage('admin-product-registration-step2-conteudo');
+        });
+    });
+</script>
+

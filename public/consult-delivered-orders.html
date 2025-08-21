@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Entregas Concluídas</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/20L+o9Qj4K6M2y7c9E/B2I4P+8K8L7yT5c1vF+gD+k3zW9K6E1k+G6B5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+            max-width: 400px;
+        }
+        /* Contêiner para rolagem horizontal */
+        .orders-table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            min-width: 1300px;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            vertical-align: top;
+            white-space: nowrap;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #555;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-results {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+        .product-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+        .products-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .product-details {
+            white-space: normal;
+        }
+        /* Larguras das colunas para simular uma planilha */
+        .col-order-code { min-width: 120px; }
+        .col-image { min-width: 80px; }
+        .col-title { min-width: 200px; }
+        .col-product-code { min-width: 120px; }
+        .col-quantity { min-width: 80px; }
+        .col-date { min-width: 100px; }
+        .col-total { min-width: 100px; }
+        .col-client { min-width: 150px; }
+        .col-phone { min-width: 120px; }
+        .col-address { min-width: 350px; }
+        /* Estilo para a célula de endereço, permitindo quebra de linha */
+        td.col-address {
+            white-space: normal;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Consultar Entregas Concluídas</h2>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Pesquisar por nome, produto, data, etc.">
+        </div>
+        
+        <div class="orders-table-container">
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th class="col-order-code">Cód. Pedido</th>
+                        <th class="col-image">Imagem</th>
+                        <th class="col-title">Título</th>
+                        <th class="col-product-code">Cód. Produto</th>
+                        <th class="col-quantity">Quantidade</th>
+                        <th class="col-date">Data</th>
+                        <th class="col-total">Total</th>
+                        <th class="col-client">Cliente</th>
+                        <th class="col-phone">Telefone</th>
+                        <th class="col-address">Endereço Completo</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersTableBody">
+                    <tr><td colspan="10" class="no-results">Pesquisando pedidos...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const ordersTableBody = document.getElementById('ordersTableBody');
+
+            const debounce = (func, delay) => {
+                let timeoutId;
+                return (...args) => {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        func(...args);
+                    }, delay);
+                };
+            };
+
+            async function fetchDeliveredOrders(query = '') {
+                ordersTableBody.innerHTML = '<tr><td colspan="10" class="no-results">Carregando...</td></tr>';
+                try {
+                    const response = await fetch(`/api/delivered-orders?q=${encodeURIComponent(query)}`);
+                    if (!response.ok) {
+                        throw new Error('Falha ao buscar os pedidos.');
+                    }
+                    const orders = await response.json();
+                    renderOrders(orders);
+                } catch (error) {
+                    console.error('Erro ao buscar pedidos:', error);
+                    ordersTableBody.innerHTML = `<tr><td colspan="10" class="no-results">Erro ao carregar pedidos: ${error.message}</td></tr>`;
+                }
+            }
+
+            function renderOrders(orders) {
+                if (orders.length === 0) {
+                    ordersTableBody.innerHTML = '<tr><td colspan="10" class="no-results">Nenhum pedido encontrado.</td></tr>';
+                    return;
+                }
+            
+                let html = '';
+                orders.forEach(order => {
+                    const orderDate = new Date(order.created_at).toLocaleDateString('pt-BR');
+                    const totalAmount = order.total_amount.toFixed(2).replace('.', ',');
+                    const fullAddress = `${order.shipping_address || ''}, ${order.shipping_number || ''} ${order.shipping_complement || ''}, ${order.shipping_neighborhood || ''}, ${order.shipping_city || ''} - ${order.shipping_state || ''}, ${order.shipping_zip_code || ''}`.replace(/,\s*,/g, ',').replace(/^,\s*|,\s*$/g, '').replace(/,\s*$/g, '').trim();
+            
+                    const numProducts = order.order_items.length;
+                    order.order_items.forEach((item, index) => {
+                        const productImageUrl = item.image_url || '/path/to/placeholder.png';
+            
+                        if (index === 0) {
+                            html += `
+                                <tr>
+                                    <td class="col-order-code" rowspan="${numProducts}">${order.order_code}</td>
+                                    <td class="col-image"><img src="${productImageUrl}" alt="${item.product_name}" class="product-image"></td>
+                                    <td class="col-title">${item.product_name}</td>
+                                    <td class="col-product-code">${item.product_code || 'N/A'}</td>
+                                    <td class="col-quantity">${item.quantity}</td>
+                                    <td class="col-date" rowspan="${numProducts}">${orderDate}</td>
+                                    <td class="col-total" rowspan="${numProducts}">R$ ${totalAmount}</td>
+                                    <td class="col-client" rowspan="${numProducts}">${order.customer_name}</td>
+                                    <td class="col-phone" rowspan="${numProducts}">${order.customer_phone || 'N/A'}</td>
+                                    <td class="col-address" rowspan="${numProducts}">${fullAddress || 'N/A'}</td>
+                                </tr>
+                            `;
+                        } else {
+                            html += `
+                                <tr>
+                                    <td class="col-image"><img src="${productImageUrl}" alt="${item.product_name}" class="product-image"></td>
+                                    <td class="col-title">${item.product_name}</td>
+                                    <td class="col-product-code">${item.product_code || 'N/A'}</td>
+                                    <td class="col-quantity">${item.quantity}</td>
+                                </tr>
+                            `;
+                        }
+                    });
+                });
+                ordersTableBody.innerHTML = html;
+            }
+            
+            const debouncedFetch = debounce(fetchDeliveredOrders, 300);
+            
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                debouncedFetch(query);
+            });
+
+            fetchDeliveredOrders();
+        });
+    </script>
+</body>
+</html>
