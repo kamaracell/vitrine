@@ -1,0 +1,450 @@
+<script>
+    if (window.location.href === window.parent.location.href) {
+        window.location.replace('/admin-painel.html');
+    }
+</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto - Passo 4</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/sidebar.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Estilos gerais da página */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { margin-top: 10px; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        form label { display: block; margin-bottom: 8px; font-weight: bold; }
+        form input[type="text"], form select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            box-sizing: border-box;
+        }
+        form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        form button:hover { background-color: #218838; }
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        #statusMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #statusMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #statusMessage.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .form-data-display {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        .form-data-display h4 {
+            margin-top: 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .form-data-display p, .form-data-display ul {
+            margin: 5px 0;
+            padding-left: 10px;
+        }
+        .form-data-display strong {
+            display: inline-block;
+            width: 120px;
+        }
+        .image-preview-item {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            display: inline-block;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .tax-info-box {
+            background-color: #e9ecef;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .tax-info-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .tax-info-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .tax-info-box ul li {
+            margin-bottom: 5px;
+        }
+        .real-profit-box {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 1.1em;
+        }
+        .real-profit-box h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .real-profit-box p {
+            margin: 5px 0;
+        }
+        .hidden-info {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.replace('/index.html');
+            }
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/index.html">
+    </noscript>
+
+    <main id="main-content-wrapper">
+        <h2>Cadastro de Produto - Passo 4</h2>
+        <form id="step4Form" style="margin-bottom: 20px;">
+            <label for="cost_price">Valor de Compra (R$):</label>
+            <input type="text" id="cost_price" name="cost_price" required placeholder="0.00">
+
+            <label for="product_type">Regime Tributário:</label>
+            <select id="product_type" name="product_type">
+                <option value="mei">MEI</option>
+                <option value="simples_nacional">Simples Nacional</option>
+                <option value="lucro_presumido">Lucro Presumido</option>
+                <option value="lucro_real">Lucro Real</option>
+            </select>
+
+            <label for="profit_margin">Margem de Lucro Esperada (%):</label>
+            <input type="text" id="profit_margin" name="profit_margin" required placeholder="0">
+
+            <div id="taxInfoDisplay" class="tax-info-box"></div>
+
+            <label for="suggested_price">Preço Sugerido (R$):</label>
+            <input type="text" id="suggested_price" name="suggested_price" readonly>
+
+            <div id="realProfitDisplay" class="real-profit-box">
+                <h4>Análise do Preço Sugerido</h4>
+                <p>Valor de Compra: <span id="costValueDisplay">R$ 0,00</span></p>
+                <p>Valor dos Impostos: <span id="taxValueDisplay">R$ 0,00</span></p>
+                <p id="meiTaxPerSaleLine" class="hidden-info">Imposto MEI por Venda (10 vendas/mês): <span id="meiTaxPerSaleDisplay">R$ 0,00</span></p>
+                <p>Lucro Líquido Real: <span id="realProfitValueDisplay">R$ 0,00</span></p>
+            </div>
+            
+            <label for="final_price">Preço de Venda Final (R$):</label>
+            <input type="text" id="final_price" name="final_price" required placeholder="0.00">
+
+            <button type="button" id="prevStepButton">Anterior</button>
+            <button type="submit" id="nextStepButton">Próximo</button>
+        </form>
+
+        <div id="productDataSummary" class="form-data-display" style="display:none;">
+            <h4>Resumo dos Dados</h4>
+        </div>
+        <div id="statusMessage"></div>
+    </main>
+
+    <script>
+        const step4Form = document.getElementById('step4Form');
+        const costPriceInput = document.getElementById('cost_price');
+        const productTypeSelect = document.getElementById('product_type');
+        const profitMarginInput = document.getElementById('profit_margin');
+        const suggestedPriceInput = document.getElementById('suggested_price');
+        const finalPriceInput = document.getElementById('final_price');
+        const prevStepButton = document.getElementById('prevStepButton');
+        const statusMessageDiv = document.getElementById('statusMessage');
+        const productDataSummaryDiv = document.getElementById('productDataSummary');
+        const taxInfoDisplayDiv = document.getElementById('taxInfoDisplay');
+        const realProfitDisplayDiv = document.getElementById('realProfitDisplay');
+        const costValueDisplay = document.getElementById('costValueDisplay');
+        const taxValueDisplay = document.getElementById('taxValueDisplay');
+        const meiTaxPerSaleLine = document.getElementById('meiTaxPerSaleLine');
+        const meiTaxPerSaleDisplay = document.getElementById('meiTaxPerSaleDisplay');
+        const realProfitValueDisplay = document.getElementById('realProfitValueDisplay');
+
+        const MEI_FIXED_MONTHLY_TAX = 76.60;
+        const MEI_SALES_TO_DIVIDE = 10;
+        
+        const TAX_RATES = {
+            mei: {
+                impostos_federais: 0.0,
+                pis: 0.0,
+                cofins: 0.0,
+                icms: 0.0,
+                descricao: 'Isento de PIS, COFINS e IPI, mas paga um valor fixo mensal (DAS-MEI) que pode variar.'
+            },
+            simples_nacional: {
+                impostos_federais: 0.04,
+                pis: 0.0038,
+                cofins: 0.012,
+                icms: 0.038,
+                descricao: 'Os impostos federais são pagos em uma única alíquota no DAS. As taxas abaixo são apenas para fins de cálculo de mark-up.'
+            },
+            lucro_presumido: {
+                impostos_federais: 0.0673,
+                pis: 0.0065,
+                cofins: 0.03,
+                icms: 0.18,
+                descricao: 'Regime mais complexo. As taxas federais são pagas separadamente.'
+            },
+            lucro_real: {
+                impostos_federais: 0.0925,
+                pis: 0.0165,
+                cofins: 0.076,
+                icms: 0.18,
+                descricao: 'Taxas de PIS e COFINS não cumulativas. IRPJ e CSLL são baseados no lucro real, não no faturamento.'
+            }
+        };
+
+        function showStatusMessage(message, type) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = '';
+            statusMessageDiv.classList.add(type);
+            statusMessageDiv.style.display = 'block';
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+        }
+
+        function displayTaxInfo() {
+            let htmlContent = '<h4>Informações sobre Impostos e Taxas</h4>';
+            htmlContent += '<p><strong>Atenção:</strong> Os valores de imposto abaixo são apenas exemplos. Verifique a tabela de impostos do seu regime tributário e estado para usar os valores corretos.</p>';
+            for (const regime in TAX_RATES) {
+                const data = TAX_RATES[regime];
+                const nomeRegime = regime.replace(/_/g, ' ').toUpperCase();
+                htmlContent += `<hr><h5>${nomeRegime}</h5>`;
+                htmlContent += `<p>${data.descricao}</p>`;
+                htmlContent += `<ul>
+                    <li>PIS: ${(data.pis * 100).toFixed(2)}%</li>
+                    <li>COFINS: ${(data.cofins * 100).toFixed(2)}%</li>
+                    <li>ICMS: ${(data.icms * 100).toFixed(2)}%</li>
+                </ul>`;
+            }
+            htmlContent += `<p>O Preço Sugerido é calculado com a fórmula: <strong>(Valor de Compra * (1 + Imposto)) / (1 - Margem de Lucro)</strong>, onde o imposto é a soma das alíquotas de PIS, COFINS e ICMS.</p>`;
+            taxInfoDisplayDiv.innerHTML = htmlContent;
+        }
+
+        function calculateRealProfit() {
+            const costPrice = parseFloat(costPriceInput.value) || 0;
+            const suggestedPrice = parseFloat(suggestedPriceInput.value) || 0;
+            const productType = productTypeSelect.value;
+
+            if (productType === 'mei') {
+                meiTaxPerSaleLine.classList.remove('hidden-info');
+                const meiTaxPerSale = MEI_FIXED_MONTHLY_TAX / MEI_SALES_TO_DIVIDE;
+                meiTaxPerSaleDisplay.textContent = formatCurrency(meiTaxPerSale);
+
+                const realNetProfit = suggestedPrice - costPrice - meiTaxPerSale;
+                costValueDisplay.textContent = formatCurrency(costPrice);
+                taxValueDisplay.textContent = formatCurrency(meiTaxPerSale);
+                realProfitValueDisplay.textContent = formatCurrency(realNetProfit);
+            } else {
+                meiTaxPerSaleLine.classList.add('hidden-info');
+                const taxRates = TAX_RATES[productType];
+                if (suggestedPrice > 0 && taxRates) {
+                    const totalTaxRate = taxRates.pis + taxRates.cofins + taxRates.icms;
+                    const taxValue = suggestedPrice * totalTaxRate;
+                    const realNetProfit = suggestedPrice - costPrice - taxValue;
+                    costValueDisplay.textContent = formatCurrency(costPrice);
+                    taxValueDisplay.textContent = formatCurrency(taxValue);
+                    realProfitValueDisplay.textContent = formatCurrency(realNetProfit);
+                } else {
+                    costValueDisplay.textContent = formatCurrency(0);
+                    taxValueDisplay.textContent = formatCurrency(0);
+                    realProfitValueDisplay.textContent = formatCurrency(0);
+                }
+            }
+        }
+
+        function calculateSuggestedPrice() {
+            const costPrice = parseFloat(costPriceInput.value) || 0;
+            const productType = productTypeSelect.value;
+            const profitMargin = parseFloat(profitMarginInput.value) / 100 || 0;
+
+            let totalTaxRate = 0;
+            const taxRates = TAX_RATES[productType];
+            if (taxRates) {
+                totalTaxRate = taxRates.pis + taxRates.cofins + taxRates.icms;
+            }
+
+            const taxedCost = costPrice * (1 + totalTaxRate);
+            let suggestedPrice = taxedCost / (1 - profitMargin);
+
+            if (isNaN(suggestedPrice) || !isFinite(suggestedPrice)) {
+                suggestedPrice = 0;
+            }
+            suggestedPriceInput.value = suggestedPrice.toFixed(2);
+            finalPriceInput.min = suggestedPrice.toFixed(2);
+            validateFinalPrice();
+            calculateRealProfit();
+        }
+
+        function validateFinalPrice() {
+            const suggestedPrice = parseFloat(suggestedPriceInput.value) || 0;
+            let finalPrice = parseFloat(finalPriceInput.value) || 0;
+
+            if (finalPrice < suggestedPrice) {
+                finalPriceInput.value = suggestedPrice.toFixed(2);
+                showStatusMessage('O preço de venda não pode ser inferior ao preço sugerido.', 'error');
+            } else {
+                statusMessageDiv.style.display = 'none';
+            }
+        }
+
+        costPriceInput.addEventListener('input', calculateSuggestedPrice);
+        productTypeSelect.addEventListener('change', calculateSuggestedPrice);
+        profitMarginInput.addEventListener('input', calculateSuggestedPrice);
+        finalPriceInput.addEventListener('input', validateFinalPrice);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const productData = JSON.parse(sessionStorage.getItem('newProductData'));
+            if (!productData || !productData.images || !productData.description) {
+                showStatusMessage('Dados do produto não encontrados. Redirecionando para a Etapa 3.', 'error');
+                setTimeout(() => {
+                    window.location.href = './step3.html';
+                }, 2000);
+                return;
+            }
+
+            // Injeta o resumo dos dados na div
+            let htmlContent = '';
+            htmlContent += `<p><strong>Código:</strong> ${productData.product_code || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Nome:</strong> ${productData.name || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Descrição:</strong></p>`;
+            htmlContent += `<p>${productData.description || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Descrição Longa:</strong></p>`;
+            htmlContent += `<p>${productData.long_description || 'N/A'}</p>`;
+            
+            if (productData.technical_specifications && productData.technical_specifications.length > 0) {
+                htmlContent += `<h4>Especificações Técnicas:</h4><ul>`;
+                productData.technical_specifications.forEach(spec => {
+                    htmlContent += `<li><strong>${spec.titulo}:</strong> ${spec.valor}</li>`;
+                });
+                htmlContent += `</ul>`;
+            } else {
+                 htmlContent += `<p><strong>Especificações Técnicas:</strong> Nenhuma</p>`;
+            }
+
+            if (productData.product_sizes && productData.product_sizes.length > 0) {
+                htmlContent += `<h4>Tamanhos:</h4><ul>`;
+                productData.product_sizes.forEach(size => {
+                    htmlContent += `<li>${size}</li>`;
+                });
+                htmlContent += `</ul>`;
+            } else {
+                htmlContent += `<p><strong>Tamanhos:</strong> Nenhum</p>`;
+            }
+
+            // Inclusão da lista de cores no resumo
+            if (productData.product_colors && productData.product_colors.length > 0) {
+                htmlContent += `<h4>Cores:</h4><ul>`;
+                productData.product_colors.forEach(color => {
+                    htmlContent += `<li><span style="display: inline-block; width: 15px; height: 15px; border-radius: 50%; background-color:${color}; border: 1px solid #ccc; margin-right: 5px;"></span>${color}</li>`;
+                });
+                htmlContent += `</ul>`;
+            } else {
+                htmlContent += `<p><strong>Cores:</strong> Nenhuma</p>`;
+            }
+
+            if (productData.images && productData.images.length > 0) {
+                htmlContent += `<h4>Imagens:</h4><div class="image-preview-container">`;
+                productData.images.forEach(image => {
+                    htmlContent += `<div class="image-preview-item"><img src="${image}" alt="Imagem do Produto"></div>`;
+                });
+                htmlContent += `</div>`;
+            } else {
+                htmlContent += `<p><strong>Imagens:</strong> Nenhuma</p>`;
+            }
+
+            productDataSummaryDiv.innerHTML = htmlContent;
+            productDataSummaryDiv.style.display = 'block';
+
+            if (productData.cost_price) {
+                costPriceInput.value = productData.cost_price;
+            }
+            if (productData.product_type) {
+                productTypeSelect.value = productData.product_type;
+            }
+            if (productData.profit_margin) {
+                profitMarginInput.value = productData.profit_margin;
+            }
+            if (productData.final_price) {
+                finalPriceInput.value = productData.final_price;
+            }
+            calculateSuggestedPrice();
+            displayTaxInfo();
+        });
+
+        prevStepButton.addEventListener('click', () => {
+            window.location.href = './step3.html';
+        });
+
+        step4Form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const cost_price = parseFloat(costPriceInput.value);
+            const product_type = productTypeSelect.value;
+            const profit_margin = parseFloat(profitMarginInput.value);
+            const suggested_price = parseFloat(suggestedPriceInput.value);
+            const final_price = parseFloat(finalPriceInput.value);
+
+            if (isNaN(cost_price) || isNaN(profit_margin) || isNaN(final_price) || final_price <= 0) {
+                showStatusMessage('Por favor, preencha todos os campos corretamente.', 'error');
+                return;
+            }
+
+            const productData = JSON.parse(sessionStorage.getItem('newProductData')) || {};
+            productData.cost_price = cost_price;
+            productData.product_type = product_type;
+            productData.profit_margin = profit_margin;
+            productData.suggested_price = suggested_price;
+            productData.final_price = final_price;
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+
+            window.location.href = './step5.html';
+        });
+    </script>
+    <script src="/sidebar.js"></script>
+</body>
+</html>

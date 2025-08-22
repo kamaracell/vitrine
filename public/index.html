@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Loja Virtual</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Seja Bem-vindo à Nossa Loja!</h2>
+            <p>Descubra produtos incríveis e ofertas imperdíveis.</p>
+        </section>
+
+        <section class="products-section">
+            <h3>Nossos Produtos</h3>
+            <div id="loading-message" class="message loading">Carregando produtos...</div>
+            <div id="error-message" class="message error" style="display: none;"></div>
+            <div id="product-list" class="product-grid">
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 <span class="site-name">Minha Loja Virtual</span>. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <div id="add-to-cart-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="site-name">Sua Loja Online</h2>
+            <p id="modal-message">Produto adicionado ao carrinho!</p>
+
+            <div class="modal-buttons">
+                <button id="modal-continue-shopping-btn" class="button">Continuar Comprando</button>
+                <button id="modal-view-cart-btn" class="button primary-button">Visualizar Carrinho</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/header-loader.js"></script>
+    <script src="/cart-script.js"></script>
+    <script src="/index-script.js"></script>
+    <script src="/layout-loader.js"></script>
+</body>
+</html>

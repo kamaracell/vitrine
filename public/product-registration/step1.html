@@ -1,0 +1,150 @@
+<script>
+    if (window.location.href === window.parent.location.href) {
+        window.location.replace('/admin-painel.html');
+    }
+</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto - Passo 1</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Estilos gerais da página */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { margin-top: 10px; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        form label { display: block; margin-bottom: 8px; font-weight: bold; }
+        form input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        form button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+        }
+        form button:hover { background-color: #0056b3; }
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        #statusMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #statusMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #statusMessage.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                window.location.replace('/index.html');
+            }
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/index.html">
+    </noscript>
+
+    <main id="main-content-wrapper">
+        <h2>Cadastro de Produto - Passo 1</h2>
+        <form id="step1Form">
+            <label for="product_code">Código do Produto:</label>
+            <input type="text" id="product_code" name="product_code" required readonly>
+
+            <label for="name">Nome do Produto:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <button type="submit">Próximo</button>
+        </form>
+        <div id="statusMessage"></div>
+    </main>
+    <script>
+        const step1Form = document.getElementById('step1Form');
+        const productCodeInput = document.getElementById('product_code');
+        const statusMessageDiv = document.getElementById('statusMessage');
+
+        function showStatusMessage(message, type) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = '';
+            statusMessageDiv.classList.add(type);
+            statusMessageDiv.style.display = 'block';
+        }
+
+        async function getNextProductCode() {
+            const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('product_code');
+
+                if (error) {
+                    throw error;
+                }
+
+                let maxNumber = 0;
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        const code = item.product_code;
+                        const number = parseInt(code.replace('PROD-', ''), 10);
+                        if (!isNaN(number) && number > maxNumber) {
+                            maxNumber = number;
+                        }
+                    });
+                }
+                
+                const nextNumber = maxNumber + 1;
+                const nextCode = `PROD-${String(nextNumber).padStart(4, '0')}`;
+                productCodeInput.value = nextCode;
+            } catch (err) {
+                console.error('Erro ao buscar o próximo código do produto:', err.message);
+                showStatusMessage('Erro ao gerar o código do produto. Por favor, verifique a conexão com o Supabase.', 'error');
+                productCodeInput.value = 'PROD-ERRO';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', getNextProductCode);
+        
+        step1Form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const product_code = productCodeInput.value;
+            const name = document.getElementById('name').value;
+            
+            const productData = {
+                product_code,
+                name
+            };
+            
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+            window.location.href = './step2.html';
+        });
+    </script>
+</body>
+</html>

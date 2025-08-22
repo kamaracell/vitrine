@@ -1,0 +1,136 @@
+<script>
+    if (window.location.href === window.parent.location.href) {
+        window.location.replace('/admin-painel.html');
+    }
+</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto - Passo 5</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { margin-top: 10px; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        form button.back-button {
+            background-color: #6c757d;
+        }
+        form button.back-button:hover {
+            background-color: #5a6268;
+        }
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        #statusMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #statusMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #statusMessage.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+
+        .form-data-display {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        .form-data-display h4 {
+            margin-top: 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .form-data-display p, .form-data-display ul {
+            margin: 5px 0;
+            padding-left: 10px;
+        }
+        .form-data-display strong {
+            display: inline-block;
+            width: 150px;
+        }
+        .image-preview-item {
+            width: 80px;
+            height: 80px;
+            overflow: hidden;
+            display: inline-block;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        #progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+        }
+        #progress-bar {
+            width: 0;
+            height: 20px;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.replace('/index.html');
+            }
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/index.html">
+    </noscript>
+
+    <main id="main-content-wrapper">
+        <h2>Cadastro de Produto - Passo 5</h2>
+        <p>Por favor, revise os dados antes de concluir o cadastro.</p>
+
+        <div id="productDataSummary" class="form-data-display">
+            <h4>Resumo dos Dados</h4>
+        </div>
+        
+        <form id="step5Form">
+            <button type="button" id="prevStepButton" class="back-button">Anterior</button>
+            <button type="submit" id="completeRegistrationButton">Concluir Cadastro</button>
+        </form>
+
+        <div id="statusMessage"></div>
+    </main>
+
+    <script src="./step5.js"></script>
+</body>
+</html>

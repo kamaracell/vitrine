@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Layout</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/sidebar.css">
+    <style>
+        body.admin-page {
+            background-color: #f0f2f5;
+        }
+
+        .admin-header {
+            display: none;
+        }
+        
+        /* Ajuste do padding para o iframe */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .admin-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .admin-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"],
+        .form-group input[type="color"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group input[type="color"] {
+            height: 40px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .info-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .small-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .image-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .image-item {
+            width: 150px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-item-footer {
+            padding: 8px;
+            background-color: #f7f7f7;
+        }
+
+        .image-item-footer p {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        #page-logs {
+            margin-top: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="admin-page">
+    <div id="main-content-wrapper">
+        <main class="container">
+            <section class="admin-section">
+                <h2>Upload de Imagens de Layout</h2>
+                <p>Faça upload de imagens que serão usadas no layout do site (ex: banners, logos).</p>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="customFileName">Nome customizado da imagem (opcional, sem extensão):</label>
+                        <input type="text" id="customFileName" name="customFileName" placeholder="Ex: logo-principal">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUpload">Selecione a imagem:</label>
+                        <input type="file" id="imageUpload" name="image" accept="image/*" required>
+                    </div>
+                    <button type="submit">Enviar Imagem</button>
+                </form>
+                <div id="uploadStatus" class="status-message"></div>
+                <div id="uploadedImageUrl" class="info-message hidden"></div>
+                <p class="small-text">As imagens serão salvas na pasta <code>public/images</code>.</p>
+            </section>
+
+            <section class="admin-section">
+                <h2>Imagens Existentes (<span id="imageCount">0</span>)</h2>
+                <p>Clique no botão 'Excluir' para remover uma imagem.</p>
+                <div id="imageListContainer" class="image-list-container">
+                    <p id="noImagesMessage" class="info-message hidden">Nenhuma imagem encontrada na pasta /public/images.</p>
+                </div>
+                <div id="imageListStatus" class="status-message"></div>
+            </section>
+
+            <section class="admin-section">
+                <h2>Configurações Globais do Layout</h2>
+                <p>Altere cores do cabeçalho, rodapé, botões e o nome do site.</p>
+                <form id="layoutConfigForm">
+                    <div class="form-group">
+                        <label for="siteName">Nome do Site:</label>
+                        <input type="text" id="siteName" value="Sua Loja Online">
+                    </div>
+                    <div class="form-group">
+                        <label for="siteNameColor">Cor do Nome do Site:</label>
+                        <input type="color" id="siteNameColor" value="#61dafb">
+                    </div>
+                    <div class="form-group">
+                        <label for="headerColor">Cor de Fundo do Cabeçalho:</label>
+                        <input type="color" id="headerColor" value="#343a40">
+                    </div>
+                    <div class="form-group">
+                        <label for="headerLinkColor">Cor dos Links do Cabeçalho:</label>
+                        <input type="color" id="headerLinkColor" value="#ffffff">
+                    </div>
+                    <div class="form-group">
+                        <label for="footerColor">Cor de Fundo do Rodapé:</label>
+                        <input type="color" id="footerColor" value="#343a40">
+                    </div>
+                    <div class="form-group">
+                        <label for="footerTextColor">Cor do Texto do Rodapé:</label>
+                        <input type="color" id="footerTextColor" value="#ffffff">
+                    </div>
+                    <div class="form-group">
+                        <label for="buttonColor">Cor dos Botões (Principal):</label>
+                        <input type="color" id="buttonColor" value="#007bff">
+                    </div>
+                    <button type="submit">Salvar Configurações</button>
+                </form>
+                <div id="layoutConfigStatus" class="status-message"></div>
+            </section>
+        </main>
+        <div id="page-logs" class="container"></div>
+    </div>
+
+    <script src="/admin-layout.js"></script>
+</body>
+</html>

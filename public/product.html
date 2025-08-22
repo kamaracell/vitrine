@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="product-title-dynamic">Detalhes do Produto</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/carrocel-2.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+    
+    <main class="container product-page">
+        <div id="loading-message" class="loading-message">Carregando detalhes do produto...</div>
+        <div id="error-message" class="error-message" style="display:none;"></div>
+
+        <div id="product-content" style="display:none;">
+            <div class="product-media">
+                <div class="image-carousel-container">
+                    <div class="image-carousel-main" id="image-carousel-main">
+                    </div>
+                    <div class="image-carousel-thumbnails" id="image-carousel-thumbnails">
+                    </div>
+                    <button class="carousel-nav-button prev-button" id="prev-image">&#10094;</button>
+                    <button class="carousel-nav-button next-button" id="next-image">&#10095;</button>
+                </div>
+            </div>
+            
+            <div class="product-info">
+                <h1 id="product-name"></h1>
+                <p class="product-short-description" id="product-short-description"></p>
+                <p class="product-price" id="product-price"></p>
+                
+                <div class="product-options" id="product-options-container" style="display:none;">
+                    <label>Tamanho:</label>
+                    <div class="size-options-grid" id="size-options-grid">
+                    </div>
+                </div>
+                
+                <div class="product-actions">
+                    <form id="checkout-form">
+                        <input type="hidden" id="product-id" name="product_id">
+                        <input type="hidden" id="product-amount" name="amount">
+                        <input type="hidden" id="product-description-hidden" name="description">
+                        <input type="hidden" id="selected-size-hidden" name="selected_size">
+                        <button type="submit" class="buy-button-product-page">Comprar Agora</button>
+                    </form>
+                    <button id="add-to-cart-button" class="add-to-cart-button">Adicionar ao Carrinho</button>
+                </div>
+                
+                <div class="social-proof">
+                </div>
+            </div>
+            
+            <div class="related-products">
+                <h3>Produtos Relacionados</h3>
+                <div class="suggested-products-carousel-wrapper">
+                    <button class="carousel-nav-button prev-button" id="related-prev-button">&#10094;</button>
+                    <div class="related-products-carousel" id="related-products-carousel">
+                    </div>
+                    <button class="carousel-nav-button next-button" id="related-next-button">&#10095;</button>
+                </div>
+            </div>
+            
+            <div class="product-long-description">
+                <h3>Saiba mais sobre o produto</h3>
+                <div id="product-long-description-content"></div>
+            </div>
+
+            <div class="product-technical-specifications">
+                <div id="product-technical-specifications-content"></div>
+            </div>
+            
+            <div class="security-badges">
+                <h4>Compra 100% Segura</h4>
+                <div class="badges-grid">
+                    <div class="badge-item">
+                        <img src="/images/escudo.png" alt="Compra segura">
+                        <p>Compra 100% Segura</p>
+                    </div>
+                    <div class="badge-item">
+                        <img src="/images/entregador.png" alt="Envio rápido">
+                        <p>Envio Rápido</p>
+                    </div>
+                    <div class="badge-item">
+                        <img src="/images/parceria.png" alt="Satisfação garantida">
+                        <p>Satisfação Garantida</p>
+                    </div>
+                    <div class="badge-item">
+                        <img src="/images/atendimento.png" alt="Atendimento das 09h às 16h">
+                        <p>Atendemos das 09h às 16h</p>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <div id="image-zoom-modal" class="image-zoom-modal">
+        <span class="close-button">&times;</span>
+        <img class="modal-content" id="zoomed-image">
+    </div>
+
+    <footer class="main-footer">
+        <p>&copy; 2025 <span class="site-name">Minha Loja Virtual</span>. Todos os direitos reservados.</p>
+    </footer>
+
+    <div id="add-to-cart-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="site-name">Sua Loja Online</h2>
+            <p id="modal-message">Produto adicionado ao carrinho!</p>
+            <div class="modal-buttons">
+                <button id="modal-continue-shopping-btn" class="button">Continuar Comprando</button>
+                <button id="modal-view-cart-btn" class="button primary-button">Visualizar Carrinho</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/header-loader.js"></script>
+    <script src="/cart-script.js"></script>
+    <script src="/product-script.js"></script>
+    <script src="/layout-loader.js"></script>
+</body>
+</html>

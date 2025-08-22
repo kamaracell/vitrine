@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Sua Loja Online</title>
+  <link rel="stylesheet" href="/checkout.css?v=202507181850">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main>
+        <div class="checkout-main-content">
+            <section class="checkout-summary-section">
+                <h2>Resumo do Pedido</h2>
+                <div id="checkout-items-container" class="checkout-items-list">
+                    </div>
+            </section>
+
+            <section class="shipping-section">
+                <h2>Dados para Entrega</h2>
+                <form id="checkout-form">
+                    <div class="form-group">
+                        <label for="fullName">Nome Completo:</label>
+                        <input type="text" id="fullName" placeholder="Seu nome completo" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="payerEmail">E-mail do Pagador:</label>
+                        <input type="email" id="payerEmail" placeholder="email@exemplo.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">Telefone (DDD + Número):</label>
+                        <input type="tel" id="phoneNumber" placeholder="Ex: 11987654321" required pattern="[0-9]{10,11}" />
+                    </div>
+
+                    <h3>Endereço de Entrega</h3>
+                    <div class="form-group">
+                        <label for="zipCode">CEP:</label>
+                        <input type="text" id="zipCode" placeholder="00000-000" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="street">Rua:</label>
+                        <input type="text" id="street" placeholder="Ex: Rua das Flores" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="number">Número:</label>
+                        <input type="text" id="number" placeholder="Ex: 123" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="neighborhood">Bairro:</label>
+                        <input type="text" id="neighborhood" placeholder="Ex: Centro" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="complement">Complemento (Opcional):</label>
+                        <input type="text" id="complement" placeholder="Apto, Bloco, etc." />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label for="city">Cidade:</label>
+                            <input type="text" id="city" placeholder="Cidade" required />
+                        </div>
+                        <div class="form-group half-width">
+                            <label for="state">Estado (UF):</label>
+                            <input type="text" id="state" placeholder="UF" required maxlength="2" />
+                        </div>
+                    </div>
+
+                    <button type="submit" id="process-payment-button" class="btn btn-primary">Finalizar Pedido no Mercado Pago</button>
+                </form>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 Sua Loja Online. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <script src="/script.js"></script>
+    <script src="/remote-console-loader.js"></script>
+    <script src="/header-loader.js"></script>
+    <script src="/cart-script.js"></script>
+    <script src="/checkout-script.js"></script>
+    <script src="/layout-loader.js"></script>
+</body>
+</html>

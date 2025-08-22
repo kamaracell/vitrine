@@ -1,0 +1,410 @@
+<script>
+    if (window.location.href === window.parent.location.href) {
+        window.location.replace('/admin-painel.html');
+    }
+</script>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto - Passo 3</title>
+    <link rel="stylesheet" href="/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Estilos gerais da página */
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        nav { margin-top: 10px; }
+        nav a { color: white; text-decoration: none; margin: 0 15px; }
+        nav a:hover { text-decoration: underline; }
+        main { padding: 20px; max-width: 800px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        h2 { color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+        form button {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        form button:hover { background-color: #218838; }
+        #statusMessage {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        #statusMessage.success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        #statusMessage.error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        #statusMessage.info { background-color: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        .form-data-display {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+        }
+        .form-data-display h4 {
+            margin-top: 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .form-data-display p, .form-data-display ul {
+            margin: 5px 0;
+            padding-left: 10px;
+        }
+        .form-data-display strong {
+            display: inline-block;
+            width: 120px;
+        }
+        #imagePreviewContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            border: 1px dashed #ccc;
+            padding: 10px;
+            min-height: 100px;
+            align-items: center;
+            justify-content: center;
+        }
+        .image-preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+        }
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-preview-item .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        /* Estilos adicionados para o seletor de cores */
+        #colors-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            min-height: 40px;
+        }
+        .color-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            background-color: #e2e6ea;
+            border-radius: 15px;
+            border: 1px solid #ced4da;
+            font-size: 0.9em;
+        }
+        .color-tag .remove-color {
+            cursor: pointer;
+            margin-left: 8px;
+            font-weight: bold;
+            color: #721c24;
+        }
+        .color-swatch-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+        .color-swatch {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+        #newColorHex, #newColorText {
+            width: 100%;
+            max-width: 150px;
+        }
+        .color-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .color-input-group input[type="text"] {
+            flex-grow: 1;
+        }
+        .add-button {
+            background-color: #007bff;
+        }
+        .add-button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const SUPABASE_URL = 'https://plqhzubnjchinmnjbjmi.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBscWh6dWJuamNoaW5tbmpiam1pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEyMDE0MzQsImV4cCI6MjA2Njc3NzQzNH0.g6hecKDGbL5oaUdtspaigVae7IsyjkaxjXenKikDSwM';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (!session) {
+                window.location.replace('/index.html');
+            }
+        });
+    </script>
+    <noscript>
+        <meta http-equiv="refresh" content="0;url=/index.html">
+    </noscript>
+
+    <main id="main-content-wrapper">
+        <h2>Cadastro de Produto - Passo 3</h2>
+        <form id="step3Form" style="margin-bottom: 20px;">
+            <label for="imageUpload">Selecione as Imagens:</label>
+            <input type="file" id="imageUpload" name="imageUpload" accept="image/*" multiple>
+
+            <div id="imagePreviewContainer">
+                <p>Nenhuma imagem selecionada.</p>
+            </div>
+
+            <label>Cores Disponíveis:</label>
+            <div id="colors-container"></div>
+            <div class="color-input-group">
+                <input type="color" id="newColorHex" value="#000000">
+                <input type="text" id="newColorText" placeholder="Ex: #FF5733 ou Vermelho">
+                <button type="button" id="addColorButton" class="add-button">Adicionar Cor</button>
+            </div>
+            <div class="color-swatch-container">
+                <div class="color-swatch" style="background-color: #000000;" data-color="#000000" title="Preto"></div>
+                <div class="color-swatch" style="background-color: #FFFFFF; border-color: #ccc;" data-color="#FFFFFF" title="Branco"></div>
+                <div class="color-swatch" style="background-color: #FF0000;" data-color="#FF0000" title="Vermelho"></div>
+                <div class="color-swatch" style="background-color: #0000FF;" data-color="#0000FF" title="Azul"></div>
+                <div class="color-swatch" style="background-color: #008000;" data-color="#008000" title="Verde"></div>
+                <div class="color-swatch" style="background-color: #FFFF00; border-color: #ccc;" data-color="#FFFF00" title="Amarelo"></div>
+                <div class="color-swatch" style="background-color: #800080;" data-color="#800080" title="Roxo"></div>
+                <div class="color-swatch" style="background-color: #FFA500;" data-color="#FFA500" title="Laranja"></div>
+                <div class="color-swatch" style="background-color: #A52A2A;" data-color="#A52A2A" title="Marrom"></div>
+                <div class="color-swatch" style="background-color: #C0C0C0;" data-color="#C0C0C0" title="Prata"></div>
+            </div>
+            
+            <button type="button" id="prevStepButton">Anterior</button>
+            <button type="submit" id="nextStepButton">Próximo</button>
+        </form>
+
+        <div id="productDataSummary" class="form-data-display" style="display:none;">
+            <h4>Resumo dos Dados</h4>
+        </div>
+
+        <div id="statusMessage"></div>
+    </main>
+    <script>
+        const step3Form = document.getElementById('step3Form');
+        const imageUploadInput = document.getElementById('imageUpload');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const prevStepButton = document.getElementById('prevStepButton');
+        const statusMessageDiv = document.getElementById('statusMessage');
+        const productDataSummaryDiv = document.getElementById('productDataSummary');
+        
+        let selectedImages = [];
+        let availableColors = []; // Nova variável para as cores
+
+        // Referências aos novos elementos de cor
+        const newColorHexInput = document.getElementById('newColorHex');
+        const newColorTextInput = document.getElementById('newColorText');
+        const addColorButton = document.getElementById('addColorButton');
+        const colorsContainer = document.getElementById('colors-container');
+        const colorSwatches = document.querySelectorAll('.color-swatch');
+
+        function showStatusMessage(message, type) {
+            statusMessageDiv.textContent = message;
+            statusMessageDiv.className = '';
+            statusMessageDiv.classList.add(type);
+            statusMessageDiv.style.display = 'block';
+        }
+
+        function updateImagePreview() {
+            imagePreviewContainer.innerHTML = '';
+            if (selectedImages.length === 0) {
+                imagePreviewContainer.innerHTML = '<p>Nenhuma imagem selecionada.</p>';
+                return;
+            }
+            selectedImages.forEach((image, index) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `<img src="${image.url}" alt="Imagem do Produto">
+                                 <span class="remove-image" data-index="${index}">&times;</span>`;
+                imagePreviewContainer.appendChild(div);
+            });
+            document.querySelectorAll('.remove-image').forEach(button => {
+                button.addEventListener('click', function() {
+                    const indexToRemove = parseInt(this.dataset.index);
+                    selectedImages.splice(indexToRemove, 1);
+                    updateImagePreview();
+                });
+            });
+        }
+
+        function updateColorsDisplay() {
+            colorsContainer.innerHTML = '';
+            availableColors.forEach(color => {
+                const span = document.createElement('span');
+                span.className = 'color-tag';
+                span.style.setProperty('--color-value', color);
+                span.innerHTML = `<span style="display:inline-block; width: 12px; height: 12px; border-radius: 50%; background-color:${color}; border: 1px solid #ccc; margin-right: 5px;"></span>${color} <span class="remove-color" data-color="${color}">&times;</span>`;
+                colorsContainer.appendChild(span);
+            });
+            document.querySelectorAll('.remove-color').forEach(button => {
+                button.addEventListener('click', function() {
+                    const colorToRemove = this.dataset.color;
+                    availableColors = availableColors.filter(c => c !== colorToRemove);
+                    updateColorsDisplay();
+                });
+            });
+        }
+        
+        function isHexColor(hex) {
+            return /^#([A-Fa-f0-9]{3}){1,2}$/.test(hex);
+        }
+
+        imageUploadInput.addEventListener('change', function(event) {
+            const files = event.target.files;
+            selectedImages = [];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        selectedImages.push({ file, url: e.target.result });
+                        updateImagePreview();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+        
+        newColorHexInput.addEventListener('input', () => {
+            newColorTextInput.value = newColorHexInput.value;
+        });
+        newColorTextInput.addEventListener('input', () => {
+            if (isHexColor(newColorTextInput.value)) {
+                newColorHexInput.value = newColorTextInput.value;
+            }
+        });
+        addColorButton.addEventListener('click', () => {
+            const color = newColorTextInput.value.trim();
+            if (color && !availableColors.includes(color)) {
+                availableColors.push(color);
+                newColorTextInput.value = '';
+                newColorHexInput.value = '#000000';
+                updateColorsDisplay();
+            } else if (availableColors.includes(color)) {
+                showStatusMessage('Esta cor já foi adicionada.', 'info');
+            }
+        });
+        colorSwatches.forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                const color = swatch.dataset.color;
+                if (color && !availableColors.includes(color)) {
+                    availableColors.push(color);
+                    updateColorsDisplay();
+                } else if (availableColors.includes(color)) {
+                    showStatusMessage('Esta cor já foi adicionada.', 'info');
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const productData = JSON.parse(sessionStorage.getItem('newProductData'));
+            if (!productData || !productData.product_code || !productData.name) {
+                showStatusMessage('Dados do produto não encontrados. Redirecionando para a Etapa 1.', 'error');
+                setTimeout(() => {
+                    window.location.href = './step1.html';
+                }, 2000);
+                return;
+            }
+
+            // Injeta o resumo dos dados na div após o formulário
+            let htmlContent = '';
+            htmlContent += `<p><strong>Código:</strong> ${productData.product_code || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Nome:</strong> ${productData.name || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Descrição:</strong></p>`;
+            htmlContent += `<p>${productData.description || 'N/A'}</p>`;
+            htmlContent += `<p><strong>Descrição Longa:</strong></p>`;
+            htmlContent += `<p>${productData.long_description || 'N/A'}</p>`;
+            if (productData.technical_specifications && productData.technical_specifications.length > 0) {
+                htmlContent += `<h4>Especificações Técnicas:</h4><ul>`;
+                productData.technical_specifications.forEach(spec => {
+                    htmlContent += `<li><strong>${spec.titulo}:</strong> ${spec.valor}</li>`;
+                });
+                htmlContent += `</ul>`;
+            } else {
+                htmlContent += `<p><strong>Especificações Técnicas:</strong> Nenhuma</p>`;
+            }
+            if (productData.product_sizes && productData.product_sizes.length > 0) {
+                htmlContent += `<h4>Tamanhos:</h4><ul>`;
+                productData.product_sizes.forEach(size => {
+                    htmlContent += `<li>${size}</li>`;
+                });
+                htmlContent += `</ul>`;
+            } else {
+                htmlContent += `<p><strong>Tamanhos:</strong> Nenhum</p>`;
+            }
+            productDataSummaryDiv.innerHTML = htmlContent;
+            productDataSummaryDiv.style.display = 'block';
+
+            // Carrega as imagens e cores salvas, se existirem
+            if (productData.images && Array.isArray(productData.images)) {
+                selectedImages = productData.images.map(url => ({ file: null, url }));
+                updateImagePreview();
+            }
+            if (productData.product_colors) {
+                availableColors = productData.product_colors;
+                updateColorsDisplay();
+            }
+        });
+        prevStepButton.addEventListener('click', () => {
+            window.location.href = './step2.html';
+        });
+
+        step3Form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (selectedImages.length === 0) {
+                showStatusMessage('Por favor, selecione pelo menos uma imagem.', 'error');
+                return;
+            }
+
+            const productData = JSON.parse(sessionStorage.getItem('newProductData')) || {};
+            productData.images = selectedImages.map(img => img.url);
+            productData.product_colors = availableColors; // Salva a lista de cores no sessionStorage
+            sessionStorage.setItem('newProductData', JSON.stringify(productData));
+
+            // Redireciona para o próximo passo (step4.html)
+            window.location.href = './step4.html';
+        });
+    </script>
+</body>
+</html>

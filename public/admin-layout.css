@@ -1,0 +1,292 @@
+/* public/admin-layout.css */
+
+:root {
+    --admin-primary-color: #28a745; /* Um verde para admin */
+    --admin-secondary-color: #007bff;
+    --admin-bg-color: #f4f7f6;
+    --admin-card-bg: #ffffff;
+    --admin-text-color: #333;
+    --admin-border-color: #e0e0e0;
+    --admin-font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+    font-family: var(--admin-font-family);
+    margin: 0;
+    padding: 0;
+    background-color: var(--admin-bg-color);
+    color: var(--admin-text-color);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Header */
+.admin-header {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-card-bg);
+    padding: 20px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.admin-header h1 {
+    margin: 0;
+    font-size: 2.2em;
+    display: inline-block;
+}
+
+.admin-header nav {
+    float: right;
+    margin-top: 5px;
+}
+
+.admin-header nav a {
+    color: var(--admin-card-bg);
+    text-decoration: none;
+    font-size: 1.1em;
+    padding: 8px 15px;
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-left: 10px; /* Espaçamento entre links de navegação */
+}
+
+.admin-header nav a:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+.admin-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding-bottom: 50px;
+}
+
+/* Sections */
+.admin-section {
+    background-color: var(--admin-card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    border: 1px solid var(--admin-border-color);
+}
+
+.admin-section h2 {
+    color: var(--admin-secondary-color);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.6em;
+    border-bottom: 2px solid var(--admin-border-color);
+    padding-bottom: 10px;
+}
+
+/* Form Styling */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--admin-text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="file"],
+.form-group input[type="color"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--admin-border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="file"] {
+    padding: 5px; /* Adjust padding for file input */
+}
+
+.form-group input[type="color"] {
+    height: 40px; /* Make color input taller */
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+
+.form-group input:focus {
+    border-color: var(--admin-primary-color);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+button[type="submit"] {
+    background-color: var(--admin-primary-color);
+    color: var(--admin-card-bg);
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    width: auto;
+    min-width: 150px;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+button[type="submit"]:disabled {
+    background-color: #6c757d;
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Status Messages */
+.status-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    display: none; /* Hidden by default */
+}
+
+.status-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    display: block;
+}
+
+.status-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    display: block;
+}
+
+.info-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+.info-message.hidden {
+    display: none;
+}
+
+.small-text {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 15px;
+}
+
+/* Image List Styles */
+.image-list-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start; /* Alinha itens ao início */
+    padding-top: 10px;
+    max-height: 400px; /* Limita a altura para scroll */
+    overflow-y: auto; /* Adiciona scroll se muitas imagens */
+    border: 1px solid var(--admin-border-color);
+    border-radius: 5px;
+    padding: 15px;
+    background-color: var(--admin-bg-color);
+}
+
+.image-item {
+    border: 1px solid var(--admin-border-color);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    background-color: var(--admin-card-bg);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    width: 150px; /* Largura fixa para cada item */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.image-item img {
+    max-width: 100%;
+    height: 100px; /* Altura fixa para as miniaturas */
+    object-fit: contain; /* Garante que a imagem inteira seja visível */
+    border-radius: 4px;
+    margin-bottom: 10px;
+    border: 1px solid #f0f0f0;
+}
+
+.image-item p {
+    font-size: 0.85em;
+    word-break: break-all; /* Quebra palavras longas */
+    margin: 0 0 10px 0;
+    color: var(--admin-text-color);
+}
+
+.image-item button {
+    background-color: #dc3545; /* Vermelho para excluir */
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botão ocupa a largura total do item */
+}
+
+.image-item button:hover {
+    background-color: #c82333;
+}
+
+/* Remote Log Display - Same as main script for consistency */
+#page-logs {
+    background-color: #333;
+    color: #eee;
+    padding: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 0.8em;
+    margin-top: 30px;
+}
+
+.log-entry.info { color: #87ceeb; }
+.log-entry.warn { color: #ffd700; }
+.log-entry.error { color: #ff6347; }
+.log-entry.debug { color: #98fb98; }
+
+/* Media Queries */
+@media (min-width: 768px) {
+    .admin-main-content {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .admin-section {
+        flex: 1;
+        min-width: 45%;
+        max-width: 48%;
+    }
+}

@@ -1,0 +1,8 @@
+# Conteúdo comum para Node.js
+# Dependências
+node_modules/
+# Variáveis de ambiente
+.env
+# Logs e outros
+npm-debug.log*
+.DS_Store

@@ -1,0 +1,32 @@
+{
+  "name": "minha-loja-virtual",
+  "version": "1.0.0",
+  "description": "Projeto de e-commerce com Node.js e Mercado Pago",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "dev": "node api/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.50.2",
+    "axios": "^1.10.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "mercadopago": "^2.0.0",
+    "multi": "^0.1.2",
+    "uuid": "^11.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamaracell/minha-loja-virtual-backup.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kamaracell/minha-loja-virtual-backup/issues"
+  },
+  "homepage": "https://github.com/kamaracell/minha-loja-virtual-backup#readme"
+}
