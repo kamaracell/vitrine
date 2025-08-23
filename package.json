@@ -21,12 +21,12 @@
     "multi": "^0.1.2",
     "uuid": "^11.1.0"
   },
-  "repository": {
+"repository": {
     "type": "git",
-    "url": "git+https://github.com/kamaracell/minha-loja-virtual-backup.git"
+    "url": "git+https://github.com/kamaracell/vitrine.git"
   },
   "bugs": {
-    "url": "https://github.com/kamaracell/minha-loja-virtual-backup/issues"
+    "url": "https://github.com/kamaracell/vitrine/issues"
   },
-  "homepage": "https://github.com/kamaracell/minha-loja-virtual-backup#readme"
+  "homepage": "https://github.com/kamaracell/vitrine#readme"
 }
