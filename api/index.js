@@ -409,7 +409,7 @@ app.delete('/api/admin/images/:fileName', (req, res) => {
     }
 
     fs.unlink(filePath, (err) => {
-        if (err) { return res.status(err.code === 'ENOENT' ? 404 : 500).json({ success: false, message: `Erro ao excluir imagem ${fileName}.`, details: err.message }); }
+        if (err) { return res.status(err.code === 'ENOENT' ? 404 : 500).json({ success: false, message: `Erro ao excluir imagem ${fileName}.`, details: error.message }); }
         console.log(`Arquivo ${fileName} excluído.`);
         res.json({ success: true, message: `Imagem ${fileName} excluída com sucesso.` });
     });
@@ -506,8 +506,7 @@ app.post('/create_preference', async (req, res) => {
         // 2. Inserir o registro principal do pedido na tabela 'orders'
         const { data: orderData, error: orderError } = await supabase
             .from('orders')
-            .insert([
-                {
+            .insert([{
                     order_code: newOrderCode,
                     customer_code: customerCode,
                     total_amount: totalAmount,
@@ -529,7 +528,7 @@ app.post('/create_preference', async (req, res) => {
             .select();
         if (orderError) {
             console.error('Erro Supabase: Falha ao criar ordem principal no banco de dados:', orderError);
-            return res.status(500).json({ error: 'Falha ao criar ordem no banco de dados.', details: orderError.message });
+            return res.status(500).json({ error: 'Falha ao criar ordem no banco de dados.', details: error.message });
         }
         const orderId = orderData[0].id; // O ID do pedido recém-criado na tabela 'orders' (o UUID técnico)
         console.log('Ordem principal criada no Supabase com ID:', orderId, 'e Código:', newOrderCode);
@@ -551,7 +550,7 @@ app.post('/create_preference', async (req, res) => {
             .insert(orderItemsToInsert);
         if (orderItemsError) {
             console.error('Erro Supabase: Falha ao inserir itens do pedido:', orderItemsError);
-            return res.status(500).json({ error: 'Falha ao salvar detalhes dos itens do pedido.', details: orderItemsError.message });
+            return res.status(500).json({ error: 'Falha ao salvar detalhes dos itens do pedido.', details: error.message });
         }
         console.log(`[${newOrderCode}] ${orderItemsToInsert.length} itens do pedido inseridos na tabela 'order_items'.`);
 
@@ -591,7 +590,7 @@ app.post('/create_preference', async (req, res) => {
             notification_url: `${appBaseUrl}/webhook`,
             auto_return: 'approved',
             external_reference: String(orderId), // Usa o ID da ordem principal (UUID) para referência no MP
-            platform_id: 'mp-connect' // ADIÇÃO
+            platform_id: 'mp-connect'
         };
         console.log('Corpo da preferência enviado ao Mercado Pago (debug):', JSON.stringify(body, null, 2));
         const mpPreference = await preference.create({ body });
