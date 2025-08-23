@@ -173,10 +173,9 @@ app.get('/api/products-admin', async (req, res) => {
         console.error('Erro ao buscar produtos:', error);
         res.status(500).json({ error: 'Erro interno do servidor ao buscar produtos.', details: error.message });
     }
-});
+    });
 
-// Rota para buscar os pedidos com os itens e informações do produto
-app.get('/api/orders', async (req, res) => {
+    app.get('/api/orders', async (req, res) => {
     console.log(`GET /api/orders para painel de visão geral.`);
     try {
         // CORREÇÃO: Incluindo 'description' na consulta
@@ -507,7 +506,8 @@ app.post('/create_preference', async (req, res) => {
         // 2. Inserir o registro principal do pedido na tabela 'orders'
         const { data: orderData, error: orderError } = await supabase
             .from('orders')
-            .insert([{
+            .insert([
+                {
                     order_code: newOrderCode,
                     customer_code: customerCode,
                     total_amount: totalAmount,
@@ -591,6 +591,7 @@ app.post('/create_preference', async (req, res) => {
             notification_url: `${appBaseUrl}/webhook`,
             auto_return: 'approved',
             external_reference: String(orderId), // Usa o ID da ordem principal (UUID) para referência no MP
+            platform_id: 'mp-connect' // ADIÇÃO
         };
         console.log('Corpo da preferência enviado ao Mercado Pago (debug):', JSON.stringify(body, null, 2));
         const mpPreference = await preference.create({ body });
@@ -711,7 +712,7 @@ app.post('/webhook', async (req, res) => {
             const mpPaymentStatus = paymentDetails.status;
             if (!externalReference) {
                 console.error('Erro Webhook: external_reference não encontrado nos detalhes do pagamento do MP. Não é possível associar a uma ordem.');
-                return res.status(400).send('Missing external_reference from MP API response.');
+                return res.status(400).send('Missing identifiable resource type or ID.');
             }
             const { data, error } = await supabase
                 .from('orders')
